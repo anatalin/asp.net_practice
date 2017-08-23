@@ -40,6 +40,44 @@ namespace Core.Services
             }
         }
 
+        public void UpdateComment(Comment comment)
+        {
+            try
+            {
+                using (LearnDBContext context = new LearnDBContext())
+                {
+                    var commentRepo = new CommentRepository(context);
+
+                    commentRepo.Update(comment);
+
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public void DeleteComment(int id)
+        {
+            try
+            {
+                using (LearnDBContext context = new LearnDBContext())
+                {
+                    var commentRepo = new CommentRepository(context);
+
+                    commentRepo.Delete(id);
+
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
 
         //private void SuperTest()
         //{

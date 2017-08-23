@@ -11,5 +11,7 @@ namespace Core.Services
     {
         IEnumerable<Comment> GetComments(int postId);
         bool AddCommentByPost(int postId, Comment comment);
+        void UpdateComment(Comment comment);
+        void DeleteComment(int id);
     }
 }

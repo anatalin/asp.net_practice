@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Core.Models;
+using Core.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,31 +11,23 @@ namespace LearnWebApplication.Controllers
 {
     public class CommentsController : ApiController
     {
-        // GET: api/Comments
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        private readonly ICommentService cs;
 
-        // GET: api/Comments/5
-        public string Get(int id)
+        public CommentsController(ICommentService commentService)
         {
-            return "value";
-        }
-
-        // POST: api/Comments
-        public void Post([FromBody]string value)
-        {
+            cs = commentService;
         }
 
         // PUT: api/Comments/5
-        public void Put(int id, [FromBody]string value)
+        public void PutComment(Comment comment)
         {
+            cs.UpdateComment(comment);
         }
 
         // DELETE: api/Comments/5
-        public void Delete(int id)
+        public void DeleteComment(int id)
         {
+            cs.DeleteComment(id);
         }
     }
 }

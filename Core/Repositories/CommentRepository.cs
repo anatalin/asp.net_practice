@@ -29,7 +29,12 @@ namespace Core.Repositories
 
         public void Delete(Comment entity)
         {
-            throw new NotImplementedException();
+            context.Comments.Remove(entity);
+        }
+
+        public void Delete(int entityId)
+        {
+            this.Delete(context.Comments.SingleOrDefault(c => c.CommentId == entityId));
         }
 
         public Comment Get(int id)
@@ -49,7 +54,15 @@ namespace Core.Repositories
 
         public Comment Update(Comment entity)
         {
-            throw new NotImplementedException();
+            var updatedComment = context.Comments.SingleOrDefault(c => c.CommentId == entity.CommentId);
+
+            if (updatedComment != null)
+            {
+                //перебрать все поля, что очень не хорошо.
+                updatedComment.CommentText = entity.CommentText;
+            }
+
+            return updatedComment;
         }
     }
 }
