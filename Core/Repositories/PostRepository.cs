@@ -5,54 +5,85 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace Core.Repositories
 {
     public class PostRepository: IRepository<Post>
     {
-        private LearnDBContext context;
-
-        public PostRepository(LearnDBContext context)
+        public PostRepository()
         {
-            this.context = context;
+            
         }
 
         public Post Add(Post entity)
         {
-            return context.Posts.Add(entity);
+            using (LearnDBContext context = new LearnDBContext())
+            {
+                var post = context.Posts.Add(entity);
+                context.SaveChanges();
+                return post;
+            }
         }
 
         public void Delete(Post entity)
         {
-            context.Posts.Remove(entity);
+            using (LearnDBContext context = new LearnDBContext())
+            {
+                context.Posts.Remove(entity);
+                context.SaveChanges();
+            }
         }
 
         public void Delete(int entityId)
         {
-            this.Delete(context.Posts.SingleOrDefault(p => p.PostId == entityId));
+            using (LearnDBContext context = new LearnDBContext())
+            {
+                context.Posts.Remove(context.Posts.SingleOrDefault(p => p.PostId == entityId));
+                context.SaveChanges();
+            }
         }
 
         public Post Get(int id)
         {
-            return context.Posts.Where(p => p.PostId == id).SingleOrDefault();
+            using (LearnDBContext context = new LearnDBContext())
+            {
+                return context.Posts.Where(p => p.PostId == id).SingleOrDefault();
+            }
         }
 
         public IQueryable<Post> GetAll()
         {
-            return context.Posts;
+            using (LearnDBContext context = new LearnDBContext())
+            {
+                return context.Posts;
+            }
+        }
+
+        public IQueryable<Post> GetByExpression(Expression<Func<Post, bool>> predicate)
+        {
+            using (LearnDBContext context = new LearnDBContext())
+            {
+                return context.Posts.Where(predicate);
+            }
         }
 
         public Post Update(Post entity)
         {
-            var updatedPost = context.Posts.SingleOrDefault(p => p.PostId == entity.PostId);
-
-            if (updatedPost != null)
+            using (LearnDBContext context = new LearnDBContext())
             {
-                //перебрать все поля, что очень не хорошо.
-                updatedPost.PublishDate = entity.PublishDate;
-            }
+                var updatedPost = context.Posts.SingleOrDefault(p => p.PostId == entity.PostId);
 
-            return updatedPost;
+                if (updatedPost != null)
+                {
+                    //перебрать все поля, что очень не хорошо.
+                    updatedPost.PublishDate = entity.PublishDate;
+                }
+
+                context.SaveChanges();
+
+                return updatedPost;
+            }
         }
     }
 }

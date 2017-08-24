@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Autofac.Integration.WebApi;
+using Core;
 using Core.Models;
 using Core.Repositories;
 using Core.Services;

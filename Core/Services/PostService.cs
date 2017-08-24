@@ -12,43 +12,26 @@ namespace Core.Services
     {
         private readonly IRepository<Post> postRepo;
 
-        public PostService()
+        public PostService(IRepository<Post> postRepo)
         {
             this.postRepo = postRepo;
         }
 
         public IEnumerable<Post> GetAllPosts()
         {
-            using (LearnDBContext context = new LearnDBContext())
-            {
-                var postRepo = new PostRepository(context);
-
-                return postRepo.GetAll().ToList();
-            }
+            return postRepo.GetAll().ToList();
         }
 
         public Post GetPost(int id)
         {
-            using (LearnDBContext context = new LearnDBContext())
-            {
-                var postRepo = new PostRepository(context);
-
-                return postRepo.Get(id);
-            }
+            return postRepo.Get(id);
         }
 
         public bool TryAdd(Post post)
         {
             try
             {
-                using (LearnDBContext context = new LearnDBContext())
-                {
-                    var postRepo = new PostRepository(context);
-
-                    postRepo.Add(post);
-
-                    context.SaveChanges();
-                }
+                postRepo.Add(post);              
                 return true;
             }
             catch (Exception ex)
@@ -61,14 +44,7 @@ namespace Core.Services
         {
             try
             {
-                using (LearnDBContext context = new LearnDBContext())
-                {
-                    var postRepo = new PostRepository(context);
-
-                    postRepo.Update(post);
-
-                    context.SaveChanges();
-                }
+                postRepo.Update(post);
             }
             catch (Exception ex)
             {
@@ -80,14 +56,7 @@ namespace Core.Services
         {
             try
             {
-                using (LearnDBContext context = new LearnDBContext())
-                {
-                    var postRepo = new PostRepository(context);
-
-                    postRepo.Delete(postId);
-
-                    context.SaveChanges();
-                }
+                postRepo.Delete(postId);
             }
             catch (Exception ex)
             {
