@@ -21,7 +21,8 @@ namespace LearnWebApplication.Controllers
         }
 
         // GET: api/Posts
-        public IEnumerable<Post> GetPosts()
+        [Route("api/posts")]
+        public IEnumerable<Post> GetAll()
         {
             //PostService ps = new PostService();
 
@@ -29,6 +30,7 @@ namespace LearnWebApplication.Controllers
         }
 
         // GET: api/Posts/5
+        [Route("api/posts/{id}")]
         public Post Get(int id)
         {
             //PostService ps = new PostService();
@@ -38,7 +40,9 @@ namespace LearnWebApplication.Controllers
 
         // POST: api/Posts
         //Add Post entity
-        public void PostPost(Post post)
+        [HttpPost]
+        [Route("api/posts")]
+        public void Create(Post post)
         {
             //PostService ps = new PostService();
 
@@ -50,35 +54,20 @@ namespace LearnWebApplication.Controllers
 
         // PUT: api/Posts
         //Редактирование поста
-        public void PutPost(Post post)
+        [HttpPut]
+        [Route("api/posts")]
+        public void Update(Post post)
         {
             ps.UpdatePost(post);
         }
 
         // DELETE: api/Posts/{id}
         //удаление поста
-        public void DeletePost(int id)
+        [HttpDelete]
+        [Route("api/posts/{id}")]
+        public void Delete(int id)
         {
             ps.DeletePost(id);
-        }
-
-        [Route("api/posts/{postId}/comments")]
-        public IEnumerable<Comment> GetComment(int postId)
-        {
-            //CommentService cs = new CommentService();
-            IEnumerable<Comment> list = cs.GetComments(postId);
-            return cs.GetComments(postId);
-        }
-
-        //Добавление комментария к посту
-        [Route("api/posts/{postId}/comments")]
-        public void PostComment(int postId, Comment comment)
-        {
-            //CommentService cs = new CommentService();
-            if (!cs.AddCommentByPost(postId, comment))
-            {
-                //обработать ошибку
-            }
-        }
+        }        
     }
 }

@@ -18,16 +18,41 @@ namespace LearnWebApplication.Controllers
             cs = commentService;
         }
 
-        // PUT: api/Comments/5
-        public void PutComment(Comment comment)
+        // PUT: api/Comments
+        [HttpPut]
+        [Route("api/comments")]
+        public void Update(Comment comment)
         {
             cs.UpdateComment(comment);
         }
 
         // DELETE: api/Comments/5
-        public void DeleteComment(int id)
+        [HttpDelete]
+        [Route("api/comments/{id}")]
+        public void Delete(int id)
         {
             cs.DeleteComment(id);
+        }
+
+        [HttpGet]
+        [Route("api/posts/{postId}/comments")]
+        public IEnumerable<Comment> Get(int postId)
+        {
+            //CommentService cs = new CommentService();
+            IEnumerable<Comment> list = cs.GetComments(postId);
+            return cs.GetComments(postId);
+        }
+
+        //Добавление комментария к посту
+        [HttpPost]
+        [Route("api/posts/{postId}/comments")]
+        public void Create(int postId, Comment comment)
+        {
+            //CommentService cs = new CommentService();
+            if (!cs.AddCommentByPost(postId, comment))
+            {
+                //обработать ошибку
+            }
         }
     }
 }
