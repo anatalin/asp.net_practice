@@ -20,7 +20,7 @@ namespace Core.Services
         public IEnumerable<Comment> GetComments(int postId)
         {
             //return commentRepo.GetByPost(postId).ToList();
-            return commentRepo.GetByExpression(c => c.PostId == postId).ToList();
+            return commentRepo.GetByExpression(c => c.PostId == postId);
         }
 
         public bool AddCommentByPost(int postId, Comment comment)

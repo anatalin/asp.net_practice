@@ -53,19 +53,19 @@ namespace Core.Repositories
             }
         }
 
-        public IQueryable<Comment> GetByPost(int postId)
+        public IEnumerable<Comment> GetByPost(int postId)
         {
             using (LearnDBContext context = new LearnDBContext())
             {
-                return context.Comments.Where(c => c.PostId == postId);
+                return context.Comments.Where(c => c.PostId == postId).ToList();
             }
         }
 
-        public IQueryable<Comment> GetAll()
+        public IEnumerable<Comment> GetAll()
         {
             using (LearnDBContext context = new LearnDBContext())
             {
-                return context.Comments;
+                return context.Comments.ToList();
             }
         }
 
@@ -87,11 +87,11 @@ namespace Core.Repositories
             }
         }
 
-        public IQueryable<Comment> GetByExpression(Expression<Func<Comment, bool>> predicate)
+        public IEnumerable<Comment> GetByExpression(Expression<Func<Comment, bool>> predicate)
         {
             using (LearnDBContext context = new LearnDBContext())
             {
-                return context.Comments.Where(predicate);
+                return context.Comments.Where(predicate).ToList();
             }
         }
     }

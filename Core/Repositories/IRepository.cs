@@ -11,10 +11,10 @@ namespace Core.Repositories
     {
         T Add(T entity);
         T Get(int id);
-        IQueryable<T> GetAll();
+        IEnumerable<T> GetAll();
         T Update(T entity);
         void Delete(T entity);
         void Delete(int entityId);
-        IQueryable<T> GetByExpression(Expression<Func<T, bool>> predicate);
+        IEnumerable<T> GetByExpression(Expression<Func<T, bool>> predicate);
     }
 }

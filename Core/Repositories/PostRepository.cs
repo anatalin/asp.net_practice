@@ -52,19 +52,19 @@ namespace Core.Repositories
             }
         }
 
-        public IQueryable<Post> GetAll()
+        public IEnumerable<Post> GetAll()
         {
             using (LearnDBContext context = new LearnDBContext())
             {
-                return context.Posts;
+                return context.Posts.ToList();
             }
         }
 
-        public IQueryable<Post> GetByExpression(Expression<Func<Post, bool>> predicate)
+        public IEnumerable<Post> GetByExpression(Expression<Func<Post, bool>> predicate)
         {
             using (LearnDBContext context = new LearnDBContext())
             {
-                return context.Posts.Where(predicate);
+                return context.Posts.Where(predicate).ToList();
             }
         }
 

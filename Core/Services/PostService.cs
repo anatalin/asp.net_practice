@@ -19,7 +19,7 @@ namespace Core.Services
 
         public IEnumerable<Post> GetAllPosts()
         {
-            return postRepo.GetAll().ToList();
+            return postRepo.GetAll();
         }
 
         public Post GetPost(int id)
