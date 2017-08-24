@@ -10,9 +10,14 @@ namespace Core.Models
     {
         public int CommentId { get; set; }
 
-        public string CommentText { get; set; }
+        public string Text { get; set; }
+
+        public DateTime PublishDate { get; set; }
 
         public int PostId { get; set; }
         public virtual Post Post { get; set; }
+
+        public int AuthorId { get; set; }
+        public Author Author { get; set; }
     }
 }

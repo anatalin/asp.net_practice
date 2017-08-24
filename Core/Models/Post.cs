@@ -15,11 +15,14 @@ namespace Core.Models
         [Column(TypeName = "date")]
         public DateTime PublishDate { get; set; }
 
-        public ICollection<Comment> Comments { get; set; }
+        public string Text { get; set; }
 
-        public Post()
-        {
-            Comments = new List<Comment>();
-        }
+        [MaxLength(255)]
+        public string Description { get; set; }
+
+        public int AuthorId { get; set; }
+        public Author Author { get; set; }
+
+        public ICollection<Comment> Comments { get; set; }      
     }
 }
