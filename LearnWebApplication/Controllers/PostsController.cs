@@ -28,6 +28,14 @@ namespace LearnWebApplication.Controllers
             return ps.GetAllPosts();
         }
 
+        /// <summary>
+        /// Получает пост по его идентификатору
+        /// </summary>
+        /// <remarks>
+        /// Получает сущность поста
+        /// </remarks>
+        /// <param name="id">Идентификатор поста</param>
+        /// <returns>Сущность поста из БД</returns>
         // GET: api/Posts/5
         public Post Get(int id)
         {
