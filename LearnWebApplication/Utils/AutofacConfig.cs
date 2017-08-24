@@ -1,8 +1,6 @@
 ﻿using Autofac;
 using Autofac.Integration.WebApi;
-using Core.Models;
-using Core.Repositories;
-using Core.Services;
+using Services.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,8 +32,8 @@ namespace LearnWebApplication.Utils
             // регистрируем споставление типов
             builder.RegisterType<PostService>().As<IPostService>();
             builder.RegisterType<CommentService>().As<ICommentService>();
-            builder.RegisterType<PostRepository>().As<IRepository<Post>>();
-            builder.RegisterType<CommentRepository>().As<IRepository<Comment>>();
+            //builder.RegisterType<PostRepository>().As<IRepository<Post>>();
+            //builder.RegisterType<CommentRepository>().As<IRepository<Comment>>();
 
             // Set the dependency resolver to be Autofac.
             var container = builder.Build();

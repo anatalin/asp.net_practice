@@ -1,5 +1,4 @@
-﻿using Core.Models;
-using Core.Services;
+﻿using Services.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +7,10 @@ using System.Net.Http;
 using System.Web.Http;
 
 namespace LearnWebApplication.Controllers
-{
+{   
+    /// <summary>
+    /// Контроллер предоставляет интерфейс взаимодействия с постами
+    /// </summary>
     public class PostsController : ApiController
     {
         private readonly IPostService ps;
