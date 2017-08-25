@@ -26,7 +26,7 @@ namespace TestDBApp
         {
             using (LearnDBContext context = new LearnDBContext())
             {
-                PostService ps = new PostService(new PostRepository(context));
+                PostService ps = new PostService(new PostRepository());
                 var prox = ps.GetPost(1);
             }
         }
@@ -35,7 +35,7 @@ namespace TestDBApp
         {
             using (LearnDBContext context = new LearnDBContext())
             {
-                PostService ps = new PostService(new PostRepository(context));
+                PostService ps = new PostService(new PostRepository());
 
                 PostGetProxy postProxy = new PostGetProxy() {AuthorId=1, Description="Test description", PublishDate = DateTime.Now, Text="New text"};
 
@@ -51,7 +51,7 @@ namespace TestDBApp
             {
                 var commentRepo = new CommentRepository();
 
-                commentRepo.Add(1302, new Comment { Text = "This is comment for 1302 post", PostId = 1302});
+                commentRepo.Add(new Comment { Text = "This is comment for 1302 post", PostId = 1302});
 
                 context.SaveChanges();
             }

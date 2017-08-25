@@ -20,9 +20,9 @@ namespace Services.Services
             this.postRepo = postRepo;
         }
 
-        public IEnumerable<Post> GetAllPosts()
+        public IEnumerable<PostGetProxy> GetAllPosts()
         {
-            return postRepo.GetAll();
+            return ((List<Post>)postRepo.GetAll()).ConvertAll<PostGetProxy>(Converters.Converter<Post,PostGetProxy>.Convert);  
         }
 
         public PostGetProxy GetPost(int id)
@@ -33,7 +33,7 @@ namespace Services.Services
             
             if (dbPost != null)
             {
-                return Converters.Converter<Post, PostGetProxy>.ToProxy(dbPost);
+                return Converters.Converter<Post, PostGetProxy>.Convert(dbPost);
             }
             else
                 throw new Exception("Not found entity in DB.");
@@ -50,7 +50,7 @@ namespace Services.Services
                     return false;                    
                 }
 
-                dbPost = Converters.Converter<PostGetProxy, Post>.ToProxy(postProxy);
+                dbPost = Converters.Converter<PostGetProxy, Post>.Convert(postProxy);
 
                 postRepo.Add(dbPost);
                 return true;
@@ -61,11 +61,19 @@ namespace Services.Services
             }
         }
 
-        public void UpdatePost(Post post)
+        public void UpdatePost(PostGetProxy postProxy)
         {
             try
             {
-                postRepo.Update(post);
+                Post dbPost;
+
+                if (postProxy == null)
+                {
+                    return;
+                }
+
+                dbPost = Converters.Converter<PostGetProxy, Post>.Convert(postProxy);
+                postRepo.Update(dbPost);
             }
             catch (Exception ex)
             {

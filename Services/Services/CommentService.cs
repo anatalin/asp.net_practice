@@ -1,6 +1,7 @@
 ﻿using Core;
 using Core.Models;
 using Core.Repositories;
+using Services.ProxyModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,18 +19,26 @@ namespace Services.Services
             this.commentRepo = commentRepo;
         }
 
-        public IEnumerable<Comment> GetComments(int postId)
+        public IEnumerable<CommentGetProxy> GetComments(int postId)
         {
-            //return commentRepo.GetByPost(postId).ToList();
-            return commentRepo.GetByExpression(c => c.PostId == postId);
+            return ((List<Comment>)commentRepo.GetByExpression(c => c.PostId == postId)).ConvertAll<CommentGetProxy>(Converters.Converter<Comment,CommentGetProxy>.Convert);
         }
 
-        public bool AddCommentByPost(int postId, Comment comment)
+        public bool AddCommentByPost(int postId, CommentGetProxy commentProxy)
         {
             try
             {
-                comment.PostId = postId;
-                commentRepo.Add(comment);
+                Comment commentDb;
+
+                if (commentProxy == null)
+                {
+                    return false;
+                }
+
+                commentDb = Converters.Converter<CommentGetProxy, Comment>.Convert(commentProxy);
+
+                commentDb.PostId = postId;
+                commentRepo.Add(commentDb);
                 return true;
             }
             catch (Exception ex)
@@ -38,11 +47,20 @@ namespace Services.Services
             }
         }
 
-        public void UpdateComment(Comment comment)
+        public void UpdateComment(CommentGetProxy commentProxy)
         {
             try
             {
-                commentRepo.Update(comment);
+                Comment commentDb;
+
+                if (commentProxy == null)
+                {
+                    return;
+                }
+
+                commentDb = Converters.Converter<CommentGetProxy, Comment>.Convert(commentProxy);
+
+                commentRepo.Update(commentDb);
             }
             catch (Exception ex)
             {

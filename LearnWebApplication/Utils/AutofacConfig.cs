@@ -3,7 +3,7 @@ using Autofac.Integration.WebApi;
 using Core;
 using Core.Models;
 using Core.Repositories;
-using Core.Services;
+using Services.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

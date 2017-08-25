@@ -6,34 +6,36 @@ using System.Threading.Tasks;
 
 namespace Services.Converters
 {
-    public class Converter<T,TProxy>
-                        where T: class 
-                        where TProxy: class
+    public class Converter<TInput, TOutput>
+                        where TInput : class
+                        where TOutput : class
     {
-        static public TProxy ToProxy(T obj)
-        {
-            var objProxy = (TProxy)Activator.CreateInstance(typeof(TProxy));
+        private delegate TOutput ConvertAction(TInput objIn);
 
-            var props = typeof(T).GetProperties();
-            var propsProxy = typeof(TProxy).GetProperties();
+        static public TOutput Convert(TInput objIn)
+        {
+            var objOutput = (TOutput)Activator.CreateInstance(typeof(TOutput));
+
+            var propsIn = typeof(TInput).GetProperties();
+            var propsOut = typeof(TOutput).GetProperties();
 
             //props[0].Name
 
-            foreach (var prop in props)
+            foreach (var prop in propsIn)
             {
-                foreach (var propProxy in propsProxy)
+                foreach (var propOut in propsOut)
                 {
-                    if (propProxy.Name == prop.Name)
+                    if (propOut.Name == prop.Name)
                     {
-                        if (objProxy != null)
+                        if (objOutput != null)
                         {
-                            propProxy.SetValue(objProxy, prop.GetValue(obj));
+                            propOut.SetValue(objOutput, prop.GetValue(objIn));
                         }                        
                     }
                 }
             }
 
-            return objProxy;
+            return objOutput;
         }
     }
 }

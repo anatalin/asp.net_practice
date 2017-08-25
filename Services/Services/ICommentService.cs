@@ -1,4 +1,4 @@
-﻿using Core.Models;
+﻿using Services.ProxyModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +9,9 @@ namespace Services.Services
 {
     public interface ICommentService
     {
-        IEnumerable<Comment> GetComments(int postId);
-        bool AddCommentByPost(int postId, Comment comment);
-        void UpdateComment(Comment comment);
+        IEnumerable<CommentGetProxy> GetComments(int postId);
+        bool AddCommentByPost(int postId, CommentGetProxy comment);
+        void UpdateComment(CommentGetProxy comment);
         void DeleteComment(int id);
     }
 }

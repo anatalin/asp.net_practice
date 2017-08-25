@@ -26,20 +26,25 @@ namespace LearnWebApplication.Controllers
             this.cs = commentService;
         }
 
+        /// <summary>
+        /// Возвращает все посты из БД
+        /// </summary>
+        /// <remarks>
+        /// Возвращает список всех сущностей хранящиеся в БД
+        /// </remarks>
+        /// <returns></returns>
         // GET: api/Posts
         [Route("api/posts")]
-        public IEnumerable<Post> GetAll()
+        public IEnumerable<PostGetProxy> GetAll()
         {
-            //PostService ps = new PostService();
-
             return ps.GetAllPosts();
         }
 
         /// <summary>
-        /// Получает пост по его идентификатору
+        /// Возвращает пост по его идентификатору
         /// </summary>
         /// <remarks>
-        /// Получает сущность поста
+        /// Возвращает сущность поста
         /// </remarks>
         /// <param name="id">Идентификатор поста</param>
         /// <returns>Сущность поста из БД</returns>
@@ -47,34 +52,42 @@ namespace LearnWebApplication.Controllers
         [Route("api/posts/{id}")]
         public PostGetProxy Get(int id)
         {
-            //PostService ps = new PostService();
-
             return ps.GetPost(id);
         }
 
+        /// <summary>
+        /// Создает пост переданный в теле запроса
+        /// </summary>
+        /// <param name="post"></param>
         // POST: api/Posts
         //Add Post entity
         [HttpPost]
         [Route("api/posts")]
-        public void Create(Post post)
+        public void Create(PostGetProxy post)
         {
-            //PostService ps = new PostService();
-
             if(!ps.TryAdd(post))
             {
                 //что если ошибка?
             }
         }
 
+        /// <summary>
+        /// Обновляет информацию о посте
+        /// </summary>
+        /// <param name="post"></param>
         // PUT: api/Posts
         //Редактирование поста
         [HttpPut]
         [Route("api/posts")]
-        public void Update(Post post)
+        public void Update(PostGetProxy post)
         {
             ps.UpdatePost(post);
         }
 
+        /// <summary>
+        /// Удаляет пост
+        /// </summary>
+        /// <param name="id"></param>
         // DELETE: api/Posts/{id}
         //удаление поста
         [HttpDelete]
