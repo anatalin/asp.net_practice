@@ -26,13 +26,14 @@ namespace LearnWebApplication.Controllers
             this.cs = commentService;
         }
 
-        //// GET: api/Posts
-        //public IEnumerable<Post> GetPosts()
-        //{
-        //    PostService ps = new PostService();
+        // GET: api/Posts
+        [Route("api/posts")]
+        public IEnumerable<Post> GetAll()
+        {
+            //PostService ps = new PostService();
 
-        //    return ps.GetAllPosts();
-        //}
+            return ps.GetAllPosts();
+        }
 
         /// <summary>
         /// Получает пост по его идентификатору
@@ -43,6 +44,7 @@ namespace LearnWebApplication.Controllers
         /// <param name="id">Идентификатор поста</param>
         /// <returns>Сущность поста из БД</returns>
         // GET: api/Posts/5
+        [Route("api/posts/{id}")]
         public PostGetProxy Get(int id)
         {
             //PostService ps = new PostService();
@@ -50,49 +52,36 @@ namespace LearnWebApplication.Controllers
             return ps.GetPost(id);
         }
 
-        //// POST: api/Posts
-        ////Add Post entity
-        //public void PostPost(Post post)
-        //{
-        //    //PostService ps = new PostService();
+        // POST: api/Posts
+        //Add Post entity
+        [HttpPost]
+        [Route("api/posts")]
+        public void Create(Post post)
+        {
+            //PostService ps = new PostService();
 
-        //    if(!ps.TryAdd(post))
-        //    {
-        //        //что если ошибка?
-        //    }
-        //}
+            if(!ps.TryAdd(post))
+            {
+                //что если ошибка?
+            }
+        }
 
-        //// PUT: api/Posts
-        ////Редактирование поста
-        //public void PutPost(Post post)
-        //{
-        //    ps.UpdatePost(post);
-        //}
+        // PUT: api/Posts
+        //Редактирование поста
+        [HttpPut]
+        [Route("api/posts")]
+        public void Update(Post post)
+        {
+            ps.UpdatePost(post);
+        }
 
-        //// DELETE: api/Posts/{id}
-        ////удаление поста
-        //public void DeletePost(int id)
-        //{
-        //    ps.DeletePost(id);
-        //}
-
-        //[Route("api/posts/{postId}/comments")]
-        //public IEnumerable<Comment> GetComment(int postId)
-        //{
-        //    //CommentService cs = new CommentService();
-        //    IEnumerable<Comment> list = cs.GetComments(postId);
-        //    return cs.GetComments(postId);
-        //}
-
-        ////Добавление комментария к посту
-        //[Route("api/posts/{postId}/comments")]
-        //public void PostComment(int postId, Comment comment)
-        //{
-        //    //CommentService cs = new CommentService();
-        //    if (!cs.AddCommentByPost(postId, comment))
-        //    {
-        //        //обработать ошибку
-        //    }
-        //}
+        // DELETE: api/Posts/{id}
+        //удаление поста
+        [HttpDelete]
+        [Route("api/posts/{id}")]
+        public void Delete(int id)
+        {
+            ps.DeletePost(id);
+        }        
     }
 }

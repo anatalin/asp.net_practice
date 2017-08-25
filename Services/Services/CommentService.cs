@@ -11,28 +11,25 @@ namespace Services.Services
 {
     public class CommentService: ICommentService
     {
+        private readonly IRepository<Comment> commentRepo;
+
+        public CommentService(IRepository<Comment> commentRepo)
+        {
+            this.commentRepo = commentRepo;
+        }
+
         public IEnumerable<Comment> GetComments(int postId)
         {
-            using (LearnDBContext context = new LearnDBContext())
-            {
-                var commentRepo = new CommentRepository(context);
-
-                return commentRepo.GetByPost(postId).ToList();
-            }
+            //return commentRepo.GetByPost(postId).ToList();
+            return commentRepo.GetByExpression(c => c.PostId == postId);
         }
 
         public bool AddCommentByPost(int postId, Comment comment)
         {
             try
             {
-                using (LearnDBContext context = new LearnDBContext())
-                {
-                    var commentRepo = new CommentRepository(context);
-
-                    commentRepo.Add(postId, comment);
-
-                    context.SaveChanges();
-                }
+                comment.PostId = postId;
+                commentRepo.Add(comment);
                 return true;
             }
             catch (Exception ex)
@@ -41,16 +38,28 @@ namespace Services.Services
             }
         }
 
+        public void UpdateComment(Comment comment)
+        {
+            try
+            {
+                commentRepo.Update(comment);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
 
-        //private void SuperTest()
-        //{
-        //    LearnDBContext context = new LearnDBContext();
-        //    context.Students.Select(s => new {Student = s, JournalCount = s.Journals.GroupBy(j => j.Mark).Select(j => new { Mark = j.Mark, Cnt = j.Count()}) });
-
-        //    if (context.Posts.Any())
-        //    {
-
-        //    }
-        //}
+        public void DeleteComment(int id)
+        {
+            try
+            {
+                commentRepo.Delete(id);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

@@ -22,25 +22,15 @@ namespace Services.Services
 
         public IEnumerable<Post> GetAllPosts()
         {
-            using (LearnDBContext context = new LearnDBContext())
-            {
-                var postRepo = new PostRepository(context);
-
-                return postRepo.GetAll().ToList();
-            }
+            return postRepo.GetAll();
         }
 
         public PostGetProxy GetPost(int id)
         {
             Post dbPost;
 
-            using (LearnDBContext context = new LearnDBContext())
-            {
-                var postRepo = new PostRepository(context);
-
-                dbPost = postRepo.Get(id);
-            }
-
+            dbPost = postRepo.Get(id);
+            
             if (dbPost != null)
             {
                 return Converters.Converter<Post, PostGetProxy>.ToProxy(dbPost);
@@ -62,14 +52,7 @@ namespace Services.Services
 
                 dbPost = Converters.Converter<PostGetProxy, Post>.ToProxy(postProxy);
 
-                using (LearnDBContext context = new LearnDBContext())
-                {
-                    var postRepo = new PostRepository(context);
-
-                    postRepo.Add(dbPost);
-
-                    context.SaveChanges();
-                }
+                postRepo.Add(dbPost);
                 return true;
             }
             catch (Exception ex)
@@ -82,14 +65,7 @@ namespace Services.Services
         {
             try
             {
-                using (LearnDBContext context = new LearnDBContext())
-                {
-                    var postRepo = new PostRepository(context);
-
-                    postRepo.Update(post);
-
-                    context.SaveChanges();
-                }
+                postRepo.Update(post);
             }
             catch (Exception ex)
             {
@@ -101,14 +77,7 @@ namespace Services.Services
         {
             try
             {
-                using (LearnDBContext context = new LearnDBContext())
-                {
-                    var postRepo = new PostRepository(context);
-
-                    postRepo.Delete(postId);
-
-                    context.SaveChanges();
-                }
+                postRepo.Delete(postId);
             }
             catch (Exception ex)
             {

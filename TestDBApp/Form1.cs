@@ -49,7 +49,7 @@ namespace TestDBApp
         {
             using (LearnDBContext context = new LearnDBContext())
             {
-                var commentRepo = new CommentRepository(context);
+                var commentRepo = new CommentRepository();
 
                 commentRepo.Add(1302, new Comment { Text = "This is comment for 1302 post", PostId = 1302});
 
@@ -61,7 +61,7 @@ namespace TestDBApp
         {
             using (LearnDBContext context = new LearnDBContext())
             {
-                var postRepo = new PostRepository(context);
+                var postRepo = new PostRepository();
 
                 postRepo.Delete(1);//(new Post { PostId = 1, PublishDate = Convert.ToDateTime("23.08.2017") });
 
