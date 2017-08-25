@@ -1,6 +1,8 @@
 ﻿using Core;
 using Core.Models;
 using Core.Repositories;
+using Services.ProxyModels;
+using Services.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,15 +26,8 @@ namespace TestDBApp
         {
             using (LearnDBContext context = new LearnDBContext())
             {
-                var postRepo = new PostRepository(context);
-                
-
-                //var coll = context.Posts;
-
-                foreach (var i in postRepo.GetAll())
-                {
-                    this.richTextBox1.AppendText(i.PublishDate.ToString() + "\n");
-                }
+                PostService ps = new PostService(new PostRepository(context));
+                var prox = ps.GetPost(1);
             }
         }
 
@@ -40,9 +35,11 @@ namespace TestDBApp
         {
             using (LearnDBContext context = new LearnDBContext())
             {
-                var postRepo = new PostRepository(context);
+                PostService ps = new PostService(new PostRepository(context));
 
-                postRepo.Add(new Post { PublishDate = DateTime.Now, Comments = new List<Comment> { new Comment { CommentText = "Comment from button" } } });
+                PostGetProxy postProxy = new PostGetProxy() {AuthorId=1, Description="Test description", PublishDate = DateTime.Now, Text="New text"};
+
+                ps.TryAdd(postProxy);
 
                 context.SaveChanges();
             }
@@ -54,7 +51,7 @@ namespace TestDBApp
             {
                 var commentRepo = new CommentRepository(context);
 
-                commentRepo.Add(1302, new Comment { CommentText = "This is comment for 1302 post", PostId = 1302});
+                commentRepo.Add(1302, new Comment { Text = "This is comment for 1302 post", PostId = 1302});
 
                 context.SaveChanges();
             }

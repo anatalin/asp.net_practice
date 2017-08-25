@@ -48,13 +48,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LearnDBContext.cs" />
-    <Compile Include="Migrations\201708170955367_InitialCreate.cs" />
-    <Compile Include="Migrations\201708170955367_InitialCreate.Designer.cs">
-      <DependentUpon>201708170955367_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201708210642183_Change1.cs" />
-    <Compile Include="Migrations\201708210642183_Change1.Designer.cs">
-      <DependentUpon>201708210642183_Change1.cs</DependentUpon>
+    <Compile Include="LearnDBInitializer.cs" />
+    <Compile Include="Migrations\201708251000465_Init.cs" />
+    <Compile Include="Migrations\201708251000465_Init.Designer.cs">
+      <DependentUpon>201708251000465_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Author.cs" />
@@ -70,13 +67,9 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201708170955367_InitialCreate.resx">
-      <DependentUpon>201708170955367_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201708210642183_Change1.resx">
-      <DependentUpon>201708210642183_Change1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201708251000465_Init.resx">
+      <DependentUpon>201708251000465_Init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

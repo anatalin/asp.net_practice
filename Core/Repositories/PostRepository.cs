@@ -34,7 +34,7 @@ namespace Core.Repositories
 
         public Post Get(int id)
         {
-            return context.Posts.Where(p => p.PostId == id).SingleOrDefault();
+            return context.Posts.Include("Author").Where(p => p.PostId == id).SingleOrDefault();
         }
 
         public IQueryable<Post> GetAll()

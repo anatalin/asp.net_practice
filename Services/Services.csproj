@@ -48,7 +48,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Converters\Converter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProxyModels\AuthorGetProxy.cs" />
+    <Compile Include="ProxyModels\CommentGetProxy.cs" />
+    <Compile Include="ProxyModels\PostGetProxy.cs" />
     <Compile Include="Services\CommentService.cs" />
     <Compile Include="Services\ICommentService.cs" />
     <Compile Include="Services\IPostService.cs" />
@@ -64,5 +68,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

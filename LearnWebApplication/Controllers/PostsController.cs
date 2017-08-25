@@ -1,4 +1,5 @@
-﻿using Services.Services;
+﻿using Services.ProxyModels;
+using Services.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,19 +17,22 @@ namespace LearnWebApplication.Controllers
         private readonly IPostService ps;
         private readonly ICommentService cs;
 
+        /// <summary>
+        /// Контроллер предоставляет интерфейс для работы с постами
+        /// </summary>
         public PostsController(IPostService postService, ICommentService commentService)
         {
             this.ps = postService;
             this.cs = commentService;
         }
 
-        // GET: api/Posts
-        public IEnumerable<Post> GetPosts()
-        {
-            //PostService ps = new PostService();
+        //// GET: api/Posts
+        //public IEnumerable<Post> GetPosts()
+        //{
+        //    PostService ps = new PostService();
 
-            return ps.GetAllPosts();
-        }
+        //    return ps.GetAllPosts();
+        //}
 
         /// <summary>
         /// Получает пост по его идентификатору
@@ -39,56 +43,56 @@ namespace LearnWebApplication.Controllers
         /// <param name="id">Идентификатор поста</param>
         /// <returns>Сущность поста из БД</returns>
         // GET: api/Posts/5
-        public Post Get(int id)
+        public PostGetProxy Get(int id)
         {
             //PostService ps = new PostService();
 
             return ps.GetPost(id);
         }
 
-        // POST: api/Posts
-        //Add Post entity
-        public void PostPost(Post post)
-        {
-            //PostService ps = new PostService();
+        //// POST: api/Posts
+        ////Add Post entity
+        //public void PostPost(Post post)
+        //{
+        //    //PostService ps = new PostService();
 
-            if(!ps.TryAdd(post))
-            {
-                //что если ошибка?
-            }
-        }
+        //    if(!ps.TryAdd(post))
+        //    {
+        //        //что если ошибка?
+        //    }
+        //}
 
-        // PUT: api/Posts
-        //Редактирование поста
-        public void PutPost(Post post)
-        {
-            ps.UpdatePost(post);
-        }
+        //// PUT: api/Posts
+        ////Редактирование поста
+        //public void PutPost(Post post)
+        //{
+        //    ps.UpdatePost(post);
+        //}
 
-        // DELETE: api/Posts/{id}
-        //удаление поста
-        public void DeletePost(int id)
-        {
-            ps.DeletePost(id);
-        }
+        //// DELETE: api/Posts/{id}
+        ////удаление поста
+        //public void DeletePost(int id)
+        //{
+        //    ps.DeletePost(id);
+        //}
 
-        [Route("api/posts/{postId}/comments")]
-        public IEnumerable<Comment> GetComment(int postId)
-        {
-            //CommentService cs = new CommentService();
-            IEnumerable<Comment> list = cs.GetComments(postId);
-            return cs.GetComments(postId);
-        }
+        //[Route("api/posts/{postId}/comments")]
+        //public IEnumerable<Comment> GetComment(int postId)
+        //{
+        //    //CommentService cs = new CommentService();
+        //    IEnumerable<Comment> list = cs.GetComments(postId);
+        //    return cs.GetComments(postId);
+        //}
 
-        //Добавление комментария к посту
-        [Route("api/posts/{postId}/comments")]
-        public void PostComment(int postId, Comment comment)
-        {
-            //CommentService cs = new CommentService();
-            if (!cs.AddCommentByPost(postId, comment))
-            {
-                //обработать ошибку
-            }
-        }
+        ////Добавление комментария к посту
+        //[Route("api/posts/{postId}/comments")]
+        //public void PostComment(int postId, Comment comment)
+        //{
+        //    //CommentService cs = new CommentService();
+        //    if (!cs.AddCommentByPost(postId, comment))
+        //    {
+        //        //обработать ошибку
+        //    }
+        //}
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Core;
 using Core.Models;
 using Core.Repositories;
+using Services.ProxyModels;
+using Services.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +15,7 @@ namespace Services.Services
     {
         private readonly IRepository<Post> postRepo;
 
-        public PostService()
+        public PostService(IRepository<Post> postRepo)
         {
             this.postRepo = postRepo;
         }
@@ -28,25 +30,43 @@ namespace Services.Services
             }
         }
 
-        public Post GetPost(int id)
+        public PostGetProxy GetPost(int id)
         {
+            Post dbPost;
+
             using (LearnDBContext context = new LearnDBContext())
             {
                 var postRepo = new PostRepository(context);
 
-                return postRepo.Get(id);
+                dbPost = postRepo.Get(id);
             }
+
+            if (dbPost != null)
+            {
+                return Converters.Converter<Post, PostGetProxy>.ToProxy(dbPost);
+            }
+            else
+                throw new Exception("Not found entity in DB.");
         }
 
-        public bool TryAdd(Post post)
+        public bool TryAdd(PostGetProxy postProxy)
         {
             try
             {
+                Post dbPost;
+
+                if (postProxy == null)
+                {
+                    return false;                    
+                }
+
+                dbPost = Converters.Converter<PostGetProxy, Post>.ToProxy(postProxy);
+
                 using (LearnDBContext context = new LearnDBContext())
                 {
                     var postRepo = new PostRepository(context);
 
-                    postRepo.Add(post);
+                    postRepo.Add(dbPost);
 
                     context.SaveChanges();
                 }
