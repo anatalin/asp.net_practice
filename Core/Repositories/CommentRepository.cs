@@ -40,7 +40,8 @@ namespace Core.Repositories
         {
             using (LearnDBContext context = new LearnDBContext())
             {
-                context.Comments.Remove(context.Comments.SingleOrDefault(c => c.CommentId == entityId));
+                Comment comment = context.Comments.SingleOrDefault(c => c.CommentId == entityId);
+                context.Comments.Remove(comment);
                 context.SaveChanges();
             }
         }
@@ -78,7 +79,8 @@ namespace Core.Repositories
                 if (updatedComment != null)
                 {
                     //перебрать все поля, что очень не хорошо.
-                    updatedComment.CommentText = entity.CommentText;
+                    updatedComment.Text = entity.Text;
+                    updatedComment.PublishDate = entity.PublishDate;
                 }
 
                 context.SaveChanges();

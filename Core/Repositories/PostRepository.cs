@@ -39,7 +39,14 @@ namespace Core.Repositories
         {
             using (LearnDBContext context = new LearnDBContext())
             {
+                //Т.к. отключено каскадное удаление приходится помнить что сначало нужно удалить все связные комментарии, что я считаю плохо
+                foreach (var comment in context.Comments.Where(c => c.PostId == entityId))
+                {
+                    context.Comments.Remove(comment);
+                }
+                
                 context.Posts.Remove(context.Posts.SingleOrDefault(p => p.PostId == entityId));
+
                 context.SaveChanges();
             }
         }
@@ -48,7 +55,7 @@ namespace Core.Repositories
         {
             using (LearnDBContext context = new LearnDBContext())
             {
-                return context.Posts.Where(p => p.PostId == id).SingleOrDefault();
+                return context.Posts.Include("Author").Where(p => p.PostId == id).SingleOrDefault();
             }
         }
 
@@ -78,6 +85,9 @@ namespace Core.Repositories
                 {
                     //перебрать все поля, что очень не хорошо.
                     updatedPost.PublishDate = entity.PublishDate;
+                    updatedPost.AuthorId = entity.AuthorId;
+                    updatedPost.Description = entity.Description;
+                    updatedPost.Text = entity.Text;
                 }
 
                 context.SaveChanges();
