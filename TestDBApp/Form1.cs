@@ -27,7 +27,7 @@ namespace TestDBApp
             using (LearnDBContext context = new LearnDBContext())
             {
                 PostService ps = new PostService(new PostRepository());
-                var prox = ps.GetPost(1);
+                var prox = ps.GetPost(4);
             }
         }
 

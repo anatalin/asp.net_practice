@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using Core.Extensions;
 
 namespace Core.Repositories
 {
@@ -55,7 +56,7 @@ namespace Core.Repositories
         {
             using (LearnDBContext context = new LearnDBContext())
             {
-                return context.Posts.Include("Author").Where(p => p.PostId == id).SingleOrDefault();
+                return context.Posts.WithHint("option(recompile)").Include("Author").Where(p => p.PostId == id).SingleOrDefault();
             }
         }
 
