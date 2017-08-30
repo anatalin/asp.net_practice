@@ -13,12 +13,15 @@ namespace UnitTestProject
         [TestMethod]
         public void CompareDbEntityWithProxy()
         {
-            Post post;
-            using (LearnDBContext context = new LearnDBContext())
-            {
-                post = context.Posts.First();
-            }
-
+            Post post = new Post {
+                Author = new Author { AuthorId = 1, Address = "Mordovia", BirthDate = DateTime.Now, FirstName="firstname", LastName = "lastname"},
+                AuthorId = 1,
+                Description = "Qwerty",
+                PostId = 23,
+                PublishDate = DateTime.Now,
+                Text = "fdsdsfkdg;kf;gkd;fgl'df;gkd;fgk'dgk'df;gk'dgkd;b,kv.cb,m"
+            };
+            
             PostGetProxy postProxy = Services.Converters.Converter<Post, PostGetProxy>.Convert(post);
 
             Assert.AreEqual(post.AuthorId, postProxy.AuthorId);
