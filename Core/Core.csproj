@@ -47,8 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\HintExtension.cs" />
-    <Compile Include="Interceptors\HintInterceptor.cs" />
+    <Compile Include="Interceptors\AddOptionRecompileInterceptor.cs" />
     <Compile Include="LearnDBConfiguration.cs" />
     <Compile Include="LearnDBContext.cs" />
     <Compile Include="LearnDBInitializer.cs" />

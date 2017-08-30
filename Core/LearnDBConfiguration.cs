@@ -12,7 +12,7 @@ namespace Core
     {
         public LearnDBConfiguration()
         {
-            this.AddInterceptor(new HintInterceptor());
+            this.AddInterceptor(new AddOptionRecompileInterceptor());
         }
     }
 }
