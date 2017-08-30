@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnWebApplication", "LearnWebApplication\LearnWebApplication.csproj", "{66DAADCE-310B-459A-8CE2-62D15E9D91FE}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestDBApp", "TestDBApp\TestDBApp.csproj", "{8C4B2C5B-5367-4F37-8235-8C2EA087F55E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{81B25515-C3F8-4D86-A916-61A2F55AFF1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject", "UnitTestProject\UnitTestProject.csproj", "{C8BC0DDF-9EFE-4A13-BEA4-11418F210DA1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,8 +35,15 @@ Global
 		{81B25515-C3F8-4D86-A916-61A2F55AFF1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81B25515-C3F8-4D86-A916-61A2F55AFF1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81B25515-C3F8-4D86-A916-61A2F55AFF1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8BC0DDF-9EFE-4A13-BEA4-11418F210DA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8BC0DDF-9EFE-4A13-BEA4-11418F210DA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8BC0DDF-9EFE-4A13-BEA4-11418F210DA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8BC0DDF-9EFE-4A13-BEA4-11418F210DA1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {34FC0843-422A-4520-BE8F-DDC3C6F98CE7}
 	EndGlobalSection
 EndGlobal
