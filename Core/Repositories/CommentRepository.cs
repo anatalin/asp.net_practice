@@ -50,6 +50,7 @@ namespace Core.Repositories
         {
             using (LearnDBContext context = new LearnDBContext())
             {
+                context.UseRecompileOption = true;
                 return context.Comments.Where(c => c.CommentId == id).SingleOrDefault();
             }
         }
@@ -58,6 +59,7 @@ namespace Core.Repositories
         {
             using (LearnDBContext context = new LearnDBContext())
             {
+                context.UseRecompileOption = true;
                 return context.Comments.Where(c => c.PostId == postId).ToList();
             }
         }
@@ -66,6 +68,7 @@ namespace Core.Repositories
         {
             using (LearnDBContext context = new LearnDBContext())
             {
+                context.UseRecompileOption = true;
                 return context.Comments.ToList();
             }
         }
@@ -93,6 +96,7 @@ namespace Core.Repositories
         {
             using (LearnDBContext context = new LearnDBContext())
             {
+                context.UseRecompileOption = true;
                 return context.Comments.Where(predicate).ToList();
             }
         }

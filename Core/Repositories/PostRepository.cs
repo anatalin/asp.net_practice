@@ -55,6 +55,7 @@ namespace Core.Repositories
         {
             using (LearnDBContext context = new LearnDBContext())
             {
+                context.UseRecompileOption = true;
                 return context.Posts.Include(p => p.Author).Where(p => p.PostId == id).SingleOrDefault();
             }
         }
@@ -63,6 +64,7 @@ namespace Core.Repositories
         {
             using (LearnDBContext context = new LearnDBContext())
             {
+                context.UseRecompileOption = true;
                 return context.Posts.ToList();
             }
         }
@@ -71,6 +73,7 @@ namespace Core.Repositories
         {
             using (LearnDBContext context = new LearnDBContext())
             {
+                context.UseRecompileOption = true;
                 return context.Posts.Where(predicate).ToList();
             }
         }

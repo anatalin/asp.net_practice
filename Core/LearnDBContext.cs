@@ -13,6 +13,21 @@ namespace Core
 {
     public class LearnDBContext: DbContext
     {
+        private bool useRecompileOption = false;
+
+        public bool UseRecompileOption
+        {
+            get
+            {
+                return useRecompileOption;
+            }
+
+            set
+            {
+                useRecompileOption = value;
+            }
+        }
+
         static LearnDBContext()
         {
             //При отсутствии БД создаст БД по модели из кода.
