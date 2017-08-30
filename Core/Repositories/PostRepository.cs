@@ -6,16 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using Z.EntityFramework.Plus;
 
 namespace Core.Repositories
 {
     public class PostRepository: IRepository<Post>
     {
-        public PostRepository()
-        {
-            
-        }
-
         public Post Add(Post entity)
         {
             using (LearnDBContext context = new LearnDBContext())
@@ -30,6 +26,7 @@ namespace Core.Repositories
         {
             using (LearnDBContext context = new LearnDBContext())
             {
+                context.Comments.Where(c => c.PostId == entity.PostId).Delete();
                 context.Posts.Remove(entity);
                 context.SaveChanges();
             }
@@ -40,15 +37,24 @@ namespace Core.Repositories
             using (LearnDBContext context = new LearnDBContext())
             {
                 //Т.к. отключено каскадное удаление приходится помнить что сначало нужно удалить все связные комментарии, что я считаю плохо
-                foreach (var comment in context.Comments.Where(c => c.PostId == entityId))
+                try
                 {
-                    context.Comments.Remove(comment);
+                    //Метод расширения Delete() из библиотеки Z.EntityFramework.Plus предположительно должен удалять одним запросом несколько записей,
+                    //но не работает из-за option(recompile)
+                    //context.Comments.Where(c => c.PostId == entityId).Delete();
+                    context.Comments.RemoveRange(context.Comments.Where(c => c.PostId == entityId));
                 }
-                
-                context.Posts.Remove(context.Posts.SingleOrDefault(p => p.PostId == entityId));
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+                Post toDelete = new Post { PostId = entityId };
+                context.Posts.Attach(toDelete);
+                context.Posts.Remove(toDelete);
 
                 context.SaveChanges();
-            }
+                }
         }
 
         public Post Get(int id)
@@ -81,15 +87,12 @@ namespace Core.Repositories
             {
                 var updatedPost = context.Posts.SingleOrDefault(p => p.PostId == entity.PostId);
 
-                if (updatedPost != null)
+                if (updatedPost == null)
                 {
-                    //перебрать все поля, что очень не хорошо.
-                    updatedPost.PublishDate = entity.PublishDate;
-                    updatedPost.AuthorId = entity.AuthorId;
-                    updatedPost.Description = entity.Description;
-                    updatedPost.Text = entity.Text;
+                    return null;
                 }
 
+                context.Entry(updatedPost).CurrentValues.SetValues(entity);
                 context.SaveChanges();
 
                 return updatedPost;
