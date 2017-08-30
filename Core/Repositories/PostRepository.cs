@@ -55,7 +55,7 @@ namespace Core.Repositories
         {
             using (LearnDBContext context = new LearnDBContext())
             {
-                return context.Posts.Include("Author").Where(p => p.PostId == id).SingleOrDefault();
+                return context.Posts.Include(p => p.Author).Where(p => p.PostId == id).SingleOrDefault();
             }
         }
 

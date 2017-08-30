@@ -47,6 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interceptors\AddOptionRecompileInterceptor.cs" />
+    <Compile Include="LearnDBConfiguration.cs" />
     <Compile Include="LearnDBContext.cs" />
     <Compile Include="LearnDBInitializer.cs" />
     <Compile Include="Migrations\201708251000465_Init.cs" />

@@ -1,7 +1,9 @@
-﻿using Core.Models;
+﻿using Core.Interceptors;
+using Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure.Interception;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
