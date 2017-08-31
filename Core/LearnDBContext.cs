@@ -13,20 +13,7 @@ namespace Core
 {
     public class LearnDBContext: DbContext
     {
-        private bool useRecompileOption = false;
-
-        public bool UseRecompileOption
-        {
-            get
-            {
-                return useRecompileOption;
-            }
-
-            set
-            {
-                useRecompileOption = value;
-            }
-        }
+        public bool UseRecompileOption { get; set;}
 
         static LearnDBContext()
         {
