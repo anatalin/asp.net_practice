@@ -12,42 +12,76 @@ namespace Core.Repositories
     {
         public Author Add(Author entity)
         {
-            throw new NotImplementedException();
+            using (LearnDBContext context = new LearnDBContext())
+            {
+                var author = context.Authors.Add(entity);
+                context.SaveChanges();
+                return author;
+            }
         }
 
         public void Delete(Author entity)
         {
-            throw new NotImplementedException();
+            using (LearnDBContext context = new LearnDBContext())
+            {
+                //Все связанные записи удаляются каскадно
+                context.Authors.Remove(entity);
+                context.SaveChanges();
+            }
         }
 
         public void Delete(int entityId)
         {
-            throw new NotImplementedException();
+            using (LearnDBContext context = new LearnDBContext())
+            {
+                Author toDelete = new Author { AuthorId = entityId };
+                context.Authors.Attach(toDelete);
+                context.Authors.Remove(toDelete);
+
+                context.SaveChanges();
+            }
         }
 
         public Author Get(int id)
         {
-            throw new NotImplementedException();
+            using (LearnDBContext context = new LearnDBContext())
+            {
+                return context.Authors.Where(a=> a.AuthorId == id).SingleOrDefault();
+            }
         }
 
-        public IQueryable<Author> GetAll()
+        public IEnumerable<Author> GetAll()
         {
-            throw new NotImplementedException();
+            using (LearnDBContext context = new LearnDBContext())
+            {
+                return context.Authors.ToList();
+            }
         }
 
         public IEnumerable<Author> GetByExpression(Expression<Func<Author, bool>> predicate)
         {
-            throw new NotImplementedException();
+            using(LearnDBContext context = new LearnDBContext())
+            {
+                return context.Authors.Where(predicate).ToList();
+            }
         }
 
         public Author Update(Author entity)
         {
-            throw new NotImplementedException();
-        }
+            using (LearnDBContext context = new LearnDBContext())
+            {
+                var updatedAuthor = context.Authors.SingleOrDefault(p => p.AuthorId == entity.AuthorId);
 
-        IEnumerable<Author> IRepository<Author>.GetAll()
-        {
-            throw new NotImplementedException();
+                if (updatedAuthor == null)
+                {
+                    return null;     
+                }
+
+                context.Entry(updatedAuthor).CurrentValues.SetValues(entity);
+                context.SaveChanges();
+
+                return updatedAuthor;
+            }
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Core
 
         public LearnDBContext():base("Name=LearnDBContext")
         {
-            //Configuration.LazyLoadingEnabled = false;            
+            //Configuration.LazyLoadingEnabled = false;
         }
 
         public DbSet<Post> Posts { get; set; }

@@ -10,13 +10,6 @@ namespace Core.Repositories
 {
     public class CommentRepository : IRepository<Comment>
     {
-        //private LearnDBContext context;
-
-        public CommentRepository()
-        {
-            
-        }
-
         public Comment Add(Comment entity)
         {
             using (LearnDBContext context = new LearnDBContext())
@@ -40,8 +33,9 @@ namespace Core.Repositories
         {
             using (LearnDBContext context = new LearnDBContext())
             {
-                Comment comment = context.Comments.SingleOrDefault(c => c.CommentId == entityId);
-                context.Comments.Remove(comment);
+                Comment toDelete = new Comment { CommentId = entityId};
+                context.Comments.Attach(toDelete);
+                context.Comments.Remove(toDelete);
                 context.SaveChanges();
             }
         }
@@ -76,13 +70,12 @@ namespace Core.Repositories
             {
                 var updatedComment = context.Comments.SingleOrDefault(c => c.CommentId == entity.CommentId);
 
-                if (updatedComment != null)
+                if (updatedComment == null)
                 {
-                    //перебрать все поля, что очень не хорошо.
-                    updatedComment.Text = entity.Text;
-                    updatedComment.PublishDate = entity.PublishDate;
+                    return null;                   
                 }
 
+                context.Entry(updatedComment).CurrentValues.SetValues(entity);
                 context.SaveChanges();
 
                 return updatedComment;
