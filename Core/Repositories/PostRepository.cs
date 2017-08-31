@@ -41,8 +41,8 @@ namespace Core.Repositories
                 {
                     //Метод расширения Delete() из библиотеки Z.EntityFramework.Plus предположительно должен удалять одним запросом несколько записей,
                     //но не работает из-за option(recompile)
-                    //context.Comments.Where(c => c.PostId == entityId).Delete();
-                    context.Comments.RemoveRange(context.Comments.Where(c => c.PostId == entityId));
+                    context.Comments.Where(c => c.PostId == entityId).Delete();
+                    //context.Comments.RemoveRange(context.Comments.Where(c => c.PostId == entityId));
                 }
                 catch (Exception ex)
                 {
