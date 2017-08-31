@@ -13,9 +13,17 @@ namespace Core.Interceptors
     {
         public override void ReaderExecuting(DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext)
         {
-            if ((command.CommandText.StartsWith("Select", StringComparison.OrdinalIgnoreCase)) && !command.CommandText.Contains("option(recompile)"))
+            var cont = interceptionContext.DbContexts.FirstOrDefault();
+
+            if (cont == null)
+                return;
+
+            if (((LearnDBContext)cont).UseRecompileOption)
             {
-                command.CommandText += " option(recompile)";
+                if ((command.CommandText.StartsWith("Select", StringComparison.OrdinalIgnoreCase)) && !command.CommandText.Contains("option(recompile)"))
+                {
+                    command.CommandText += " option(recompile)";
+                }
             }
         }
     }
