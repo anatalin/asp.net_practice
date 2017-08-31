@@ -1,4 +1,6 @@
-﻿using Services.ProxyModels;
+﻿using LearnWebApplication.Filters;
+using Services.ProxyModels;
+using Services.Results;
 using Services.Services;
 using System;
 using System.Collections.Generic;
@@ -50,7 +52,8 @@ namespace LearnWebApplication.Controllers
         /// <returns>Сущность поста из БД</returns>
         // GET: api/Posts/5
         [Route("api/posts/{id}")]
-        public PostGetProxy Get(int id)
+        [ModelException]
+        public Result<PostGetProxy> Get(int id)
         {
             return ps.GetPost(id);
         }

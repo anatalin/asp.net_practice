@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Services.Results;
+using Core.Exceptions;
+using Services.Exceptions;
 
 namespace Services.Services
 {
@@ -25,18 +28,32 @@ namespace Services.Services
             return ((List<Post>)postRepo.GetAll()).ConvertAll<PostGetProxy>(Converters.Converter<Post,PostGetProxy>.Convert);  
         }
 
-        public PostGetProxy GetPost(int id)
+        public Result<PostGetProxy> GetPost(int id)
         {
-            Post dbPost;
-
-            dbPost = postRepo.Get(id);
-            
-            if (dbPost != null)
+            try
             {
-                return Converters.Converter<Post, PostGetProxy>.Convert(dbPost);
+                Post dbPost;
+                PostGetProxy pgp;
+
+                dbPost = postRepo.Get(id);
+
+                if (dbPost != null)
+                {
+                    pgp = Converters.Converter<Post, PostGetProxy>.Convert(dbPost);
+                }
+                else
+                    throw new DbModelException("Пост не найден в БД.");
+
+                return new Result<PostGetProxy>() { Data = pgp, Error = "", IsSuccess = true };
             }
-            else
-                throw new Exception("Not found entity in DB.");
+            catch (DataAccessLayerException dalException)
+            {
+                throw new DbModelException("Ошибка получения модели.", dalException);
+            }
+            catch (Exception ex)
+            {
+                throw; //return new Result<PostGetProxy>() { Data = null, Error = ex.Message, IsSuccess = false};
+            }
         }
 
         public bool TryAdd(PostGetProxy postProxy)

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using Z.EntityFramework.Plus;
+using Core.Exceptions;
 
 namespace Core.Repositories
 {
@@ -14,91 +15,131 @@ namespace Core.Repositories
     {
         public Post Add(Post entity)
         {
-            using (LearnDBContext context = new LearnDBContext())
+            try
             {
-                var post = context.Posts.Add(entity);
-                context.SaveChanges();
-                return post;
+                using (LearnDBContext context = new LearnDBContext())
+                {
+                    var post = context.Posts.Add(entity);
+                    context.SaveChanges();
+                    return post;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataAccessLayerException(String.Format("Ошибка вставки поста. Post: {0}", entity.ToString()), ex);
             }
         }
 
         public void Delete(Post entity)
         {
-            using (LearnDBContext context = new LearnDBContext())
+            try
             {
-                context.Comments.Where(c => c.PostId == entity.PostId).Delete();
-                context.Posts.Remove(entity);
-                context.SaveChanges();
+                using (LearnDBContext context = new LearnDBContext())
+                {
+                    context.Comments.Where(c => c.PostId == entity.PostId).Delete();
+                    context.Posts.Remove(entity);
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataAccessLayerException(String.Format("Ошибка удаления поста. Post: {0}", entity.ToString()), ex);
             }
         }
 
         public void Delete(int entityId)
         {
-            using (LearnDBContext context = new LearnDBContext())
+            try
             {
-                //Т.к. отключено каскадное удаление приходится помнить что сначало нужно удалить все связные комментарии, что я считаю плохо
-                try
+                using (LearnDBContext context = new LearnDBContext())
                 {
-                    //Метод расширения Delete() из библиотеки Z.EntityFramework.Plus предположительно должен удалять одним запросом несколько записей,
-                    //но не работает из-за option(recompile)
+                    //Т.к. отключено каскадное удаление приходится помнить что сначало нужно удалить все связные комментарии, что я считаю плохо
+
                     context.Comments.Where(c => c.PostId == entityId).Delete();
-                    //context.Comments.RemoveRange(context.Comments.Where(c => c.PostId == entityId));
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
 
-                Post toDelete = new Post { PostId = entityId };
-                context.Posts.Attach(toDelete);
-                context.Posts.Remove(toDelete);
+                    Post toDelete = new Post { PostId = entityId };
+                    context.Posts.Attach(toDelete);
+                    context.Posts.Remove(toDelete);
 
-                context.SaveChanges();
+                    context.SaveChanges();
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new DataAccessLayerException(String.Format("Ошибка удаления поста. PostId: {0}", entityId), ex);
+            }
         }
 
         public Post Get(int id)
         {
-            using (LearnDBContext context = new LearnDBContext())
+            try
             {
-                context.UseRecompileOption = true;
-                return context.Posts.Include(p => p.Author).Where(p => p.PostId == id).SingleOrDefault();
+                using (LearnDBContext context = new LearnDBContext())
+                {
+                    context.UseRecompileOption = true;
+                    return context.Posts.Include(p => p.Author).Where(p => p.PostId == id).SingleOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataAccessLayerException(String.Format("Ошибка чтения поста. PostId: {0}", id), ex);
             }
         }
 
         public IEnumerable<Post> GetAll()
         {
-            using (LearnDBContext context = new LearnDBContext())
+            try
             {
-                context.UseRecompileOption = true;
-                return context.Posts.ToList();
+                using (LearnDBContext context = new LearnDBContext())
+                {
+                    context.UseRecompileOption = true;
+                    return context.Posts.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataAccessLayerException("Ошибка чтения постов", ex);
             }
         }
 
         public IEnumerable<Post> GetByExpression(Expression<Func<Post, bool>> predicate)
         {
-            using (LearnDBContext context = new LearnDBContext())
+            try
             {
-                context.UseRecompileOption = true;
-                return context.Posts.Where(predicate).ToList();
+                using (LearnDBContext context = new LearnDBContext())
+                {
+                    context.UseRecompileOption = true;
+                    return context.Posts.Where(predicate).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataAccessLayerException("Ошибка чтения постов", ex);
             }
         }
 
         public Post Update(Post entity)
         {
-            using (LearnDBContext context = new LearnDBContext())
+            try
             {
-                var updatedPost = context.Posts.SingleOrDefault(p => p.PostId == entity.PostId);
-
-                if (updatedPost == null)
+                using (LearnDBContext context = new LearnDBContext())
                 {
-                    return null;
+                    var updatedPost = context.Posts.SingleOrDefault(p => p.PostId == entity.PostId);
+
+                    if (updatedPost == null)
+                    {
+                        return null;
+                    }
+
+                    context.Entry(updatedPost).CurrentValues.SetValues(entity);
+                    context.SaveChanges();
+
+                    return updatedPost;
                 }
-
-                context.Entry(updatedPost).CurrentValues.SetValues(entity);
-                context.SaveChanges();
-
-                return updatedPost;
+            }
+            catch (Exception ex)
+            {
+                throw new DataAccessLayerException(String.Format("Ошибка обновления поста. Post: {0}", entity.ToString()), ex);
             }
         }
     }
