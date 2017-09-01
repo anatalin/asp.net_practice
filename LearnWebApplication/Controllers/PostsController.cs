@@ -37,6 +37,7 @@ namespace LearnWebApplication.Controllers
         /// <returns></returns>
         // GET: api/Posts
         [Route("api/posts")]
+        [ModelException]
         public IEnumerable<PostGetProxy> GetAll()
         {
             return ps.GetAllPosts();
@@ -66,6 +67,7 @@ namespace LearnWebApplication.Controllers
         //Add Post entity
         [HttpPost]
         [Route("api/posts")]
+        [ModelException]
         public void Create(PostGetProxy post)
         {
             if(!ps.Add(post))
@@ -82,6 +84,7 @@ namespace LearnWebApplication.Controllers
         //Редактирование поста
         [HttpPut]
         [Route("api/posts")]
+        [ModelException]
         public void Update(PostGetProxy post)
         {
             ps.UpdatePost(post);
@@ -95,6 +98,7 @@ namespace LearnWebApplication.Controllers
         //удаление поста
         [HttpDelete]
         [Route("api/posts/{id}")]
+        [ModelException]
         public void Delete(int id)
         {
             ps.DeletePost(id);
