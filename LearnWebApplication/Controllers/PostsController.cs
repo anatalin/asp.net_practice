@@ -10,10 +10,11 @@ using System.Net.Http;
 using System.Web.Http;
 
 namespace LearnWebApplication.Controllers
-{   
+{
     /// <summary>
     /// Контроллер предоставляет интерфейс взаимодействия с постами
     /// </summary>
+    [ModelException]
     public class PostsController : ApiController
     {
         private readonly IPostService ps;
@@ -37,7 +38,6 @@ namespace LearnWebApplication.Controllers
         /// <returns></returns>
         // GET: api/Posts
         [Route("api/posts")]
-        [ModelException]
         public IEnumerable<PostGetProxy> GetAll()
         {
             return ps.GetAllPosts();
@@ -53,7 +53,6 @@ namespace LearnWebApplication.Controllers
         /// <returns>Сущность поста из БД</returns>
         // GET: api/Posts/5
         [Route("api/posts/{id}")]
-        [ModelException]
         public Result<PostGetProxy> Get(int id)
         {
             return ps.GetPost(id);
@@ -67,7 +66,6 @@ namespace LearnWebApplication.Controllers
         //Add Post entity
         [HttpPost]
         [Route("api/posts")]
-        [ModelException]
         public void Create(PostGetProxy post)
         {
             if(!ps.Add(post))
@@ -84,7 +82,6 @@ namespace LearnWebApplication.Controllers
         //Редактирование поста
         [HttpPut]
         [Route("api/posts")]
-        [ModelException]
         public void Update(PostGetProxy post)
         {
             ps.UpdatePost(post);
@@ -98,7 +95,6 @@ namespace LearnWebApplication.Controllers
         //удаление поста
         [HttpDelete]
         [Route("api/posts/{id}")]
-        [ModelException]
         public void Delete(int id)
         {
             ps.DeletePost(id);
