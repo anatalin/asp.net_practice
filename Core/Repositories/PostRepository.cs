@@ -15,131 +15,104 @@ namespace Core.Repositories
     {
         public Post Add(Post entity)
         {
-            try
+            using (LearnDBContext context = new LearnDBContext())
             {
-                using (LearnDBContext context = new LearnDBContext())
-                {
-                    var post = context.Posts.Add(entity);
-                    context.SaveChanges();
-                    return post;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new DataAccessLayerException(String.Format("Ошибка вставки поста. Post: {0}", entity.ToString()), ex);
-            }
+                var post = context.Posts.Add(entity);
+                context.SaveChanges();
+                return post;
+            }            
         }
 
         public void Delete(Post entity)
         {
-            try
+            using (LearnDBContext context = new LearnDBContext())
             {
-                using (LearnDBContext context = new LearnDBContext())
-                {
-                    context.Comments.Where(c => c.PostId == entity.PostId).Delete();
-                    context.Posts.Remove(entity);
-                    context.SaveChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new DataAccessLayerException(String.Format("Ошибка удаления поста. Post: {0}", entity.ToString()), ex);
+                context.Comments.Where(c => c.PostId == entity.PostId).Delete();
+
+                var toDeletePost = context.Posts.FirstOrDefault(p => p.PostId == entity.PostId);
+
+                if (toDeletePost == null)
+                    throw new NotFoundException(String.Format("Пост с id = {0} не найден.", entity.PostId));
+
+                context.Posts.Remove(toDeletePost);
+                context.SaveChanges();
             }
         }
 
         public void Delete(int entityId)
         {
-            try
+            using (LearnDBContext context = new LearnDBContext())
             {
-                using (LearnDBContext context = new LearnDBContext())
-                {
-                    //Т.к. отключено каскадное удаление приходится помнить что сначало нужно удалить все связные комментарии, что я считаю плохо
+                //Т.к. отключено каскадное удаление приходится помнить что сначало нужно удалить все связные комментарии, что я считаю плохо
 
-                    context.Comments.Where(c => c.PostId == entityId).Delete();
+                context.Comments.Where(c => c.PostId == entityId).Delete();
+                
+                var toDeletePost = context.Posts.FirstOrDefault(p => p.PostId == entityId);
 
-                    Post toDelete = new Post { PostId = entityId };
-                    context.Posts.Attach(toDelete);
-                    context.Posts.Remove(toDelete);
+                if (toDeletePost == null)
+                    throw new NotFoundException(String.Format("Пост с id = {0} не найден.", entityId));
 
-                    context.SaveChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new DataAccessLayerException(String.Format("Ошибка удаления поста. PostId: {0}", entityId), ex);
+                context.Posts.Remove(toDeletePost);
+                context.SaveChanges();
             }
         }
 
         public Post Get(int id)
         {
-            try
+            using (LearnDBContext context = new LearnDBContext())
             {
-                using (LearnDBContext context = new LearnDBContext())
-                {
-                    context.UseRecompileOption = true;
-                    return context.Posts.Include(p => p.Author).Where(p => p.PostId == id).SingleOrDefault();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new DataAccessLayerException(String.Format("Ошибка чтения поста. PostId: {0}", id), ex);
+                context.UseRecompileOption = true;
+
+                var result = context.Posts.Include(p => p.Author).Where(p => p.PostId == id).SingleOrDefault();
+
+                if (result == null)
+                    throw new NotFoundException(String.Format("Пост с id = {0} не найден.", id));
+
+                return result;
             }
         }
 
         public IEnumerable<Post> GetAll()
         {
-            try
+            using (LearnDBContext context = new LearnDBContext())
             {
-                using (LearnDBContext context = new LearnDBContext())
-                {
-                    context.UseRecompileOption = true;
-                    return context.Posts.ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new DataAccessLayerException("Ошибка чтения постов", ex);
+                context.UseRecompileOption = true;
+                var postList = context.Posts.ToList();
+
+                if (postList.Count() == 0)
+                    throw new NotFoundException("Не был найден ни один пост.");
+
+                return postList;
             }
         }
 
         public IEnumerable<Post> GetByExpression(Expression<Func<Post, bool>> predicate)
         {
-            try
+            using (LearnDBContext context = new LearnDBContext())
             {
-                using (LearnDBContext context = new LearnDBContext())
-                {
-                    context.UseRecompileOption = true;
-                    return context.Posts.Where(predicate).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new DataAccessLayerException("Ошибка чтения постов", ex);
+                context.UseRecompileOption = true;
+                var postList = context.Posts.Where(predicate).ToList();
+
+                if (postList.Count() == 0)
+                    throw new NotFoundException("Не был найден ни один пост по заданному критерию.");
+
+                return postList;
             }
         }
 
         public Post Update(Post entity)
         {
-            try
+            using (LearnDBContext context = new LearnDBContext())
             {
-                using (LearnDBContext context = new LearnDBContext())
-                {
-                    var updatedPost = context.Posts.SingleOrDefault(p => p.PostId == entity.PostId);
+                var updatedPost = context.Posts.SingleOrDefault(p => p.PostId == entity.PostId);
 
-                    if (updatedPost == null)
-                    {
-                        return null;
-                    }
+                if (updatedPost == null)
+                    throw new NotFoundException(String.Format("Пост с id = {0} не найден.", entity.PostId));
 
-                    context.Entry(updatedPost).CurrentValues.SetValues(entity);
-                    context.SaveChanges();
+                context.Entry(updatedPost).CurrentValues.SetValues(entity);
+                context.SaveChanges();
 
-                    return updatedPost;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new DataAccessLayerException(String.Format("Ошибка обновления поста. Post: {0}", entity.ToString()), ex);
+                return updatedPost;
             }
         }
     }

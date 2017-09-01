@@ -12,7 +12,7 @@ namespace Services.Services
     {
         IEnumerable<PostGetProxy> GetAllPosts();
         Result<PostGetProxy> GetPost(int id);
-        bool TryAdd(PostGetProxy post);
+        bool Add(PostGetProxy post);
         void UpdatePost(PostGetProxy post);
         void DeletePost(int postId);
     }

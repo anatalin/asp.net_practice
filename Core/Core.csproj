@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\CoreException.cs" />
     <Compile Include="Exceptions\DataAccessLayerException.cs" />
+    <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="Interceptors\AddOptionRecompileInterceptor.cs" />
     <Compile Include="LearnDBConfiguration.cs" />
     <Compile Include="LearnDBContext.cs" />

@@ -30,84 +30,48 @@ namespace Services.Services
 
         public Result<PostGetProxy> GetPost(int id)
         {
-            try
-            {
-                Post dbPost;
-                PostGetProxy pgp;
+            Post dbPost;
+            PostGetProxy pgp;
 
-                dbPost = postRepo.Get(id);
+            dbPost = postRepo.Get(id);
 
-                if (dbPost != null)
-                {
-                    pgp = Converters.Converter<Post, PostGetProxy>.Convert(dbPost);
-                }
-                else
-                    throw new DbModelException("Пост не найден в БД.");
+            pgp = Converters.Converter<Post, PostGetProxy>.Convert(dbPost);
 
-                return new Result<PostGetProxy>() { Data = pgp, Error = "", IsSuccess = true };
-            }
-            catch (DataAccessLayerException dalException)
-            {
-                throw new DbModelException("Ошибка получения модели.", dalException);
-            }
-            catch (Exception ex)
-            {
-                throw; //return new Result<PostGetProxy>() { Data = null, Error = ex.Message, IsSuccess = false};
-            }
+            return new Result<PostGetProxy>() { Data = pgp};
+
         }
 
-        public bool TryAdd(PostGetProxy postProxy)
+        public bool Add(PostGetProxy postProxy)
         {
-            try
+            Post dbPost;
+
+            if (postProxy == null)
             {
-                Post dbPost;
-
-                if (postProxy == null)
-                {
-                    return false;                    
-                }
-
-                dbPost = Converters.Converter<PostGetProxy, Post>.Convert(postProxy);
-
-                postRepo.Add(dbPost);
-                return true;
+                return false;                    
             }
-            catch (Exception ex)
-            {
-                throw;
-            }
+
+            dbPost = Converters.Converter<PostGetProxy, Post>.Convert(postProxy);
+
+            postRepo.Add(dbPost);
+            return true;
         }
 
         public void UpdatePost(PostGetProxy postProxy)
         {
-            try
-            {
-                Post dbPost;
+            Post dbPost;
 
-                if (postProxy == null)
-                {
-                    return;
-                }
-
-                dbPost = Converters.Converter<PostGetProxy, Post>.Convert(postProxy);
-                postRepo.Update(dbPost);
-            }
-            catch (Exception ex)
+            if (postProxy == null)
             {
-                throw;
+                return;
             }
+
+            dbPost = Converters.Converter<PostGetProxy, Post>.Convert(postProxy);
+            postRepo.Update(dbPost);
         }
 
         public void DeletePost(int postId)
         {
-            try
-            {
-                postRepo.Delete(postId);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            postRepo.Delete(postId);
         }
     }
 }

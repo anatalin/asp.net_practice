@@ -68,7 +68,7 @@ namespace LearnWebApplication.Controllers
         [Route("api/posts")]
         public void Create(PostGetProxy post)
         {
-            if(!ps.TryAdd(post))
+            if(!ps.Add(post))
             {
                 //что если ошибка?
             }

@@ -1,4 +1,5 @@
-﻿using Services.Exceptions;
+﻿using Core.Exceptions;
+using Services.Exceptions;
 using Services.ProxyModels;
 using Services.Results;
 using System;
@@ -19,12 +20,22 @@ namespace LearnWebApplication.Filters
 
         public Task ExecuteExceptionFilterAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
         {
-            if (actionExecutedContext.Exception != null && actionExecutedContext.Exception is DbModelException)
+            if (actionExecutedContext.Exception != null)
             {
-                actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(
-                    HttpStatusCode.BadRequest,
-                    new Result<PostGetProxy>() { Data = null, Error = actionExecutedContext.Exception.Message, IsSuccess = false},
-                    actionExecutedContext.ActionContext.ControllerContext.Configuration.Formatters.JsonFormatter);
+                if (actionExecutedContext.Exception is NotFoundException)
+                {
+                    actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(
+                        HttpStatusCode.BadRequest,
+                        new Result<PostGetProxy>() { Error = actionExecutedContext.Exception.Message },
+                        actionExecutedContext.ActionContext.ControllerContext.Configuration.Formatters.JsonFormatter);
+                }
+                else
+                {
+                    actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(
+                        HttpStatusCode.BadRequest,
+                        new Result<PostGetProxy>() { Error = "При обработке запроса что-то пошло не так." },
+                        actionExecutedContext.ActionContext.ControllerContext.Configuration.Formatters.JsonFormatter);
+                }
             }
             return Task.FromResult<object>(null);
         }
