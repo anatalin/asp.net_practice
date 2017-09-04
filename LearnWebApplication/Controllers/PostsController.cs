@@ -38,9 +38,9 @@ namespace LearnWebApplication.Controllers
         /// <returns></returns>
         // GET: api/Posts
         [Route("api/posts")]
-        public IEnumerable<PostGetProxy> GetAll()
+        public Result<IEnumerable<PostGetProxy>> GetAll()
         {
-            return ps.GetAllPosts();
+            return new Result<IEnumerable<PostGetProxy>>() { Data = ps.GetAllPosts()};
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace LearnWebApplication.Controllers
         [Route("api/posts/{id}")]
         public Result<PostGetProxy> Get(int id)
         {
-            return ps.GetPost(id);
+            return new Result<PostGetProxy>() { Data = ps.GetPost(id) };
         }
 
         /// <summary>
@@ -66,12 +66,9 @@ namespace LearnWebApplication.Controllers
         //Add Post entity
         [HttpPost]
         [Route("api/posts")]
-        public void Create(PostGetProxy post)
+        public Result<PostGetProxy> Create(PostGetProxy post)
         {
-            if(!ps.Add(post))
-            {
-                //что если ошибка?
-            }
+            return new Result<PostGetProxy>() { Data = ps.Add(post) };
         }
 
         /// <summary>
@@ -82,9 +79,9 @@ namespace LearnWebApplication.Controllers
         //Редактирование поста
         [HttpPut]
         [Route("api/posts")]
-        public void Update(PostGetProxy post)
+        public Result<PostGetProxy> Update(PostGetProxy post)
         {
-            ps.UpdatePost(post);
+            return new Result<PostGetProxy>() { Data = ps.UpdatePost(post) };
         }
 
         /// <summary>

@@ -11,9 +11,9 @@ namespace Services.Services
     public interface IPostService
     {
         IEnumerable<PostGetProxy> GetAllPosts();
-        Result<PostGetProxy> GetPost(int id);
-        bool Add(PostGetProxy post);
-        void UpdatePost(PostGetProxy post);
+        PostGetProxy GetPost(int id);
+        PostGetProxy Add(PostGetProxy post);
+        PostGetProxy UpdatePost(PostGetProxy post);
         void DeletePost(int postId);
     }
 }

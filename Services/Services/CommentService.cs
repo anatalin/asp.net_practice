@@ -24,60 +24,35 @@ namespace Services.Services
             return ((List<Comment>)commentRepo.GetByExpression(c => c.PostId == postId)).ConvertAll<CommentGetProxy>(Converters.Converter<Comment,CommentGetProxy>.Convert);
         }
 
-        public bool AddCommentByPost(int postId, CommentGetProxy commentProxy)
+        public CommentGetProxy AddCommentByPost(int postId, CommentGetProxy commentProxy)
         {
-            try
-            {
-                Comment commentDb;
+            Comment commentDb;
 
-                if (commentProxy == null)
-                {
-                    return false;
-                }
+            if (commentProxy == null)
+                throw new ArgumentNullException("commentProxy");
 
-                commentDb = Converters.Converter<CommentGetProxy, Comment>.Convert(commentProxy);
+            commentDb = Converters.Converter<CommentGetProxy, Comment>.Convert(commentProxy);
 
-                commentDb.PostId = postId;
-                commentRepo.Add(commentDb);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            commentDb.PostId = postId;            
+
+            return Converters.Converter<Comment, CommentGetProxy>.Convert(commentRepo.Add(commentDb));            
         }
 
-        public void UpdateComment(CommentGetProxy commentProxy)
+        public CommentGetProxy UpdateComment(CommentGetProxy commentProxy)
         {
-            try
-            {
-                Comment commentDb;
+            Comment commentDb;
 
-                if (commentProxy == null)
-                {
-                    return;
-                }
+            if (commentProxy == null)
+                throw new ArgumentNullException("commentProxy");
 
-                commentDb = Converters.Converter<CommentGetProxy, Comment>.Convert(commentProxy);
+            commentDb = Converters.Converter<CommentGetProxy, Comment>.Convert(commentProxy);
 
-                commentRepo.Update(commentDb);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return Converters.Converter<Comment, CommentGetProxy>.Convert(commentRepo.Update(commentDb));
         }
 
         public void DeleteComment(int id)
         {
-            try
-            {
-                commentRepo.Delete(id);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            commentRepo.Delete(id);            
         }
     }
 }

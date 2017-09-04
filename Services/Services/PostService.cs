@@ -26,7 +26,7 @@ namespace Services.Services
             return ((List<Post>)postRepo.GetAll()).ConvertAll<PostGetProxy>(Converters.Converter<Post,PostGetProxy>.Convert);  
         }
 
-        public Result<PostGetProxy> GetPost(int id)
+        public PostGetProxy GetPost(int id)
         {
             Post dbPost;
             PostGetProxy pgp;
@@ -35,36 +35,31 @@ namespace Services.Services
 
             pgp = Converters.Converter<Post, PostGetProxy>.Convert(dbPost);
 
-            return new Result<PostGetProxy>() { Data = pgp};
+            return pgp;
 
         }
 
-        public bool Add(PostGetProxy postProxy)
+        public PostGetProxy Add(PostGetProxy postProxy)
         {
             Post dbPost;
 
             if (postProxy == null)
-            {
-                return false;                    
-            }
+                throw new ArgumentNullException("postProxy");
 
             dbPost = Converters.Converter<PostGetProxy, Post>.Convert(postProxy);
-
-            postRepo.Add(dbPost);
-            return true;
+            
+            return Converters.Converter<Post, PostGetProxy>.Convert(postRepo.Add(dbPost));
         }
 
-        public void UpdatePost(PostGetProxy postProxy)
+        public PostGetProxy UpdatePost(PostGetProxy postProxy)
         {
             Post dbPost;
 
             if (postProxy == null)
-            {
-                return;
-            }
+                throw new ArgumentNullException("postProxy");
 
             dbPost = Converters.Converter<PostGetProxy, Post>.Convert(postProxy);
-            postRepo.Update(dbPost);
+            return Converters.Converter<Post, PostGetProxy>.Convert(postRepo.Update(dbPost));
         }
 
         public void DeletePost(int postId)
