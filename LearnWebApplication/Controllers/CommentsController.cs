@@ -1,4 +1,5 @@
 ﻿using Core.Models;
+using LearnWebApplication.Filters;
 using Services.ProxyModels;
 using Services.Services;
 using System;
@@ -13,6 +14,7 @@ namespace LearnWebApplication.Controllers
     /// <summary>
     /// Предоставляет интерфейс взаимодействия с комментариями
     /// </summary>
+    [ModelException]
     public class CommentsController : ApiController
     {
         private readonly ICommentService cs;

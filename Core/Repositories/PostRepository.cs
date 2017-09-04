@@ -32,7 +32,7 @@ namespace Core.Repositories
                 var toDeletePost = context.Posts.FirstOrDefault(p => p.PostId == entity.PostId);
 
                 if (toDeletePost == null)
-                    throw new NotFoundException(String.Format("Пост с id = {0} не найден.", entity.PostId));
+                    throw new NotFoundException($"Пост с id = {entity.PostId} не найден.");
 
                 context.Posts.Remove(toDeletePost);
                 context.SaveChanges();
@@ -50,7 +50,7 @@ namespace Core.Repositories
                 var toDeletePost = context.Posts.FirstOrDefault(p => p.PostId == entityId);
 
                 if (toDeletePost == null)
-                    throw new NotFoundException(String.Format("Пост с id = {0} не найден.", entityId));
+                    throw new NotFoundException($"Пост с id = {entityId} не найден.");
 
                 context.Posts.Remove(toDeletePost);
                 context.SaveChanges();
@@ -66,7 +66,7 @@ namespace Core.Repositories
                 var result = context.Posts.Include(p => p.Author).Where(p => p.PostId == id).SingleOrDefault();
 
                 if (result == null)
-                    throw new NotFoundException(String.Format("Пост с id = {0} не найден.", id));
+                    throw new NotFoundException($"Пост с id = {id} не найден.");
 
                 return result;
             }
@@ -107,7 +107,7 @@ namespace Core.Repositories
                 var updatedPost = context.Posts.SingleOrDefault(p => p.PostId == entity.PostId);
 
                 if (updatedPost == null)
-                    throw new NotFoundException(String.Format("Пост с id = {0} не найден.", entity.PostId));
+                    throw new NotFoundException($"Пост с id = {entity.PostId} не найден.");
 
                 context.Entry(updatedPost).CurrentValues.SetValues(entity);
                 context.SaveChanges();

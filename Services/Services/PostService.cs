@@ -9,8 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Services.Results;
-using Core.Exceptions;
-using Services.Exceptions;
 
 namespace Services.Services
 {

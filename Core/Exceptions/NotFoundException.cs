@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Exceptions
 {
-    public class NotFoundException: CoreException
+    public class NotFoundException: Exception
     {
         public NotFoundException() : base() { }
         public NotFoundException(string message) : base(message) { }

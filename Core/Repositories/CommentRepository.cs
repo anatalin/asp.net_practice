@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using Core.Exceptions;
 
 namespace Core.Repositories
 {
@@ -24,7 +25,12 @@ namespace Core.Repositories
         {
             using (LearnDBContext context = new LearnDBContext())
             {
-                context.Comments.Remove(entity);
+                var toDeleteComment = context.Comments.FirstOrDefault(c => c.CommentId == entity.CommentId);
+
+                if (toDeleteComment == null)
+                    throw new NotFoundException($"Комментарий с id = {entity.CommentId} не найден.");
+
+                context.Comments.Remove(toDeleteComment);
                 context.SaveChanges();
             }
         }
@@ -33,9 +39,12 @@ namespace Core.Repositories
         {
             using (LearnDBContext context = new LearnDBContext())
             {
-                Comment toDelete = new Comment { CommentId = entityId};
-                context.Comments.Attach(toDelete);
-                context.Comments.Remove(toDelete);
+                var toDeleteComment = context.Comments.FirstOrDefault(c => c.CommentId == entityId);
+
+                if (toDeleteComment == null)
+                    throw new NotFoundException($"Комментарий с id = {entityId} не найден.");
+
+                context.Comments.Remove(toDeleteComment);
                 context.SaveChanges();
             }
         }
@@ -45,7 +54,13 @@ namespace Core.Repositories
             using (LearnDBContext context = new LearnDBContext())
             {
                 context.UseRecompileOption = true;
-                return context.Comments.Where(c => c.CommentId == id).SingleOrDefault();
+
+                var result = context.Comments.Where(c => c.CommentId == id).SingleOrDefault();
+
+                if (result == null)
+                    throw new NotFoundException($"Комментарий с id = {id} не найден.");
+
+                return result;
             }
         }
 
@@ -54,7 +69,12 @@ namespace Core.Repositories
             using (LearnDBContext context = new LearnDBContext())
             {
                 context.UseRecompileOption = true;
-                return context.Comments.Where(c => c.PostId == postId).ToList();
+                var commentList = context.Comments.Where(c => c.PostId == postId).ToList();
+
+                if (commentList.Count() == 0)
+                    throw new NotFoundException("Не был найден ни один комментарий.");
+
+                return commentList;
             }
         }
 
@@ -63,7 +83,12 @@ namespace Core.Repositories
             using (LearnDBContext context = new LearnDBContext())
             {
                 context.UseRecompileOption = true;
-                return context.Comments.ToList();
+                var commentList = context.Comments.ToList();
+
+                if(commentList.Count() == 0)
+                    throw new NotFoundException("Не был найден ни один комментарий.");
+
+                return commentList;
             }
         }
 
@@ -74,9 +99,7 @@ namespace Core.Repositories
                 var updatedComment = context.Comments.SingleOrDefault(c => c.CommentId == entity.CommentId);
 
                 if (updatedComment == null)
-                {
-                    return null;                   
-                }
+                    throw new NotFoundException($"Комментарий с id = {entity.PostId} не найден.");
 
                 context.Entry(updatedComment).CurrentValues.SetValues(entity);
                 context.SaveChanges();
@@ -90,7 +113,12 @@ namespace Core.Repositories
             using (LearnDBContext context = new LearnDBContext())
             {
                 context.UseRecompileOption = true;
-                return context.Comments.Where(predicate).ToList();
+                var commentList = context.Comments.Where(predicate).ToList();
+
+                if(commentList.Count() == 0)
+                    throw new NotFoundException("Не был найден ни один комментарий.");
+
+                return commentList;
             }
         }
     }
