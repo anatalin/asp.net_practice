@@ -1,4 +1,5 @@
 ﻿using Services.ProxyModels;
+using Services.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,8 @@ namespace Services.Services
     {
         IEnumerable<PostGetProxy> GetAllPosts();
         PostGetProxy GetPost(int id);
-        bool TryAdd(PostGetProxy post);
-        void UpdatePost(PostGetProxy post);
+        PostGetProxy Add(PostGetProxy post);
+        PostGetProxy UpdatePost(PostGetProxy post);
         void DeletePost(int postId);
     }
 }

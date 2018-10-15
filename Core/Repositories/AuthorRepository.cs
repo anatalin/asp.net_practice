@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using Core.Exceptions;
 
 namespace Core.Repositories
 {
@@ -25,7 +26,12 @@ namespace Core.Repositories
             using (LearnDBContext context = new LearnDBContext())
             {
                 //Все связанные записи удаляются каскадно
-                context.Authors.Remove(entity);
+                var toDeleteAuthor = context.Authors.FirstOrDefault(a => a.AuthorId == entity.AuthorId);
+
+                if (toDeleteAuthor == null)
+                    throw new NotFoundException($"Автор с id = {entity.AuthorId} не найден.");
+
+                context.Authors.Remove(toDeleteAuthor);
                 context.SaveChanges();
             }
         }
@@ -34,10 +40,12 @@ namespace Core.Repositories
         {
             using (LearnDBContext context = new LearnDBContext())
             {
-                Author toDelete = new Author { AuthorId = entityId };
-                context.Authors.Attach(toDelete);
-                context.Authors.Remove(toDelete);
+                var toDeleteAuthor = context.Authors.FirstOrDefault(a => a.AuthorId == entityId);
 
+                if (toDeleteAuthor == null)
+                    throw new NotFoundException($"Автор с id = {entityId} не найден.");
+
+                context.Authors.Remove(toDeleteAuthor);
                 context.SaveChanges();
             }
         }
@@ -46,7 +54,14 @@ namespace Core.Repositories
         {
             using (LearnDBContext context = new LearnDBContext())
             {
-                return context.Authors.Where(a=> a.AuthorId == id).SingleOrDefault();
+                context.UseRecompileOption = true;
+
+                var result = context.Authors.Where(a => a.AuthorId == id).SingleOrDefault();
+
+                if (result == null)
+                    throw new NotFoundException($"Автор с id = {id} не найден.");
+
+                return result;                
             }
         }
 
@@ -54,7 +69,13 @@ namespace Core.Repositories
         {
             using (LearnDBContext context = new LearnDBContext())
             {
-                return context.Authors.ToList();
+                context.UseRecompileOption = true;
+                var authorList = context.Authors.ToList();
+
+                if (authorList.Count() == 0)
+                    throw new NotFoundException("Не был найден ни один автор.");
+
+                return authorList;
             }
         }
 
@@ -62,7 +83,13 @@ namespace Core.Repositories
         {
             using(LearnDBContext context = new LearnDBContext())
             {
-                return context.Authors.Where(predicate).ToList();
+                context.UseRecompileOption = true;
+                var authorList = context.Authors.Where(predicate).ToList();
+
+                if (authorList.Count() == 0)
+                    throw new NotFoundException("Не был найден ни один автор по заданному критерию.");
+
+                return authorList;
             }
         }
 
@@ -73,9 +100,7 @@ namespace Core.Repositories
                 var updatedAuthor = context.Authors.SingleOrDefault(p => p.AuthorId == entity.AuthorId);
 
                 if (updatedAuthor == null)
-                {
-                    return null;     
-                }
+                    throw new NotFoundException($"Автор с id = {entity.AuthorId} не найден.");
 
                 context.Entry(updatedAuthor).CurrentValues.SetValues(entity);
                 context.SaveChanges();

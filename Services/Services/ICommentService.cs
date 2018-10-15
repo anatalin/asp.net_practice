@@ -10,8 +10,8 @@ namespace Services.Services
     public interface ICommentService
     {
         IEnumerable<CommentGetProxy> GetComments(int postId);
-        bool AddCommentByPost(int postId, CommentGetProxy comment);
-        void UpdateComment(CommentGetProxy comment);
+        CommentGetProxy AddCommentByPost(int postId, CommentGetProxy comment);
+        CommentGetProxy UpdateComment(CommentGetProxy comment);
         void DeleteComment(int id);
     }
 }

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using Z.EntityFramework.Plus;
+using Core.Exceptions;
 
 namespace Core.Repositories
 {
@@ -19,7 +20,7 @@ namespace Core.Repositories
                 var post = context.Posts.Add(entity);
                 context.SaveChanges();
                 return post;
-            }
+            }            
         }
 
         public void Delete(Post entity)
@@ -27,7 +28,13 @@ namespace Core.Repositories
             using (LearnDBContext context = new LearnDBContext())
             {
                 context.Comments.Where(c => c.PostId == entity.PostId).Delete();
-                context.Posts.Remove(entity);
+
+                var toDeletePost = context.Posts.FirstOrDefault(p => p.PostId == entity.PostId);
+
+                if (toDeletePost == null)
+                    throw new NotFoundException($"Пост с id = {entity.PostId} не найден.");
+
+                context.Posts.Remove(toDeletePost);
                 context.SaveChanges();
             }
         }
@@ -37,24 +44,17 @@ namespace Core.Repositories
             using (LearnDBContext context = new LearnDBContext())
             {
                 //Т.к. отключено каскадное удаление приходится помнить что сначало нужно удалить все связные комментарии, что я считаю плохо
-                try
-                {
-                    //Метод расширения Delete() из библиотеки Z.EntityFramework.Plus предположительно должен удалять одним запросом несколько записей,
-                    //но не работает из-за option(recompile)
-                    //context.Comments.Where(c => c.PostId == entityId).Delete();
-                    context.Comments.RemoveRange(context.Comments.Where(c => c.PostId == entityId));
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
 
-                Post toDelete = new Post { PostId = entityId };
-                context.Posts.Attach(toDelete);
-                context.Posts.Remove(toDelete);
+                context.Comments.Where(c => c.PostId == entityId).Delete();
+                
+                var toDeletePost = context.Posts.FirstOrDefault(p => p.PostId == entityId);
 
+                if (toDeletePost == null)
+                    throw new NotFoundException($"Пост с id = {entityId} не найден.");
+
+                context.Posts.Remove(toDeletePost);
                 context.SaveChanges();
-                }
+            }
         }
 
         public Post Get(int id)
@@ -62,7 +62,13 @@ namespace Core.Repositories
             using (LearnDBContext context = new LearnDBContext())
             {
                 context.UseRecompileOption = true;
-                return context.Posts.Include(p => p.Author).Where(p => p.PostId == id).SingleOrDefault();
+
+                var result = context.Posts.Include(p => p.Author).Where(p => p.PostId == id).SingleOrDefault();
+
+                if (result == null)
+                    throw new NotFoundException($"Пост с id = {id} не найден.");
+
+                return result;
             }
         }
 
@@ -71,7 +77,12 @@ namespace Core.Repositories
             using (LearnDBContext context = new LearnDBContext())
             {
                 context.UseRecompileOption = true;
-                return context.Posts.ToList();
+                var postList = context.Posts.ToList();
+
+                if (postList.Count() == 0)
+                    throw new NotFoundException("Не был найден ни один пост.");
+
+                return postList;
             }
         }
 
@@ -80,7 +91,12 @@ namespace Core.Repositories
             using (LearnDBContext context = new LearnDBContext())
             {
                 context.UseRecompileOption = true;
-                return context.Posts.Where(predicate).ToList();
+                var postList = context.Posts.Where(predicate).ToList();
+
+                if (postList.Count() == 0)
+                    throw new NotFoundException("Не был найден ни один пост по заданному критерию.");
+
+                return postList;
             }
         }
 
@@ -91,9 +107,7 @@ namespace Core.Repositories
                 var updatedPost = context.Posts.SingleOrDefault(p => p.PostId == entity.PostId);
 
                 if (updatedPost == null)
-                {
-                    return null;
-                }
+                    throw new NotFoundException($"Пост с id = {entity.PostId} не найден.");
 
                 context.Entry(updatedPost).CurrentValues.SetValues(entity);
                 context.SaveChanges();

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Services.Results;
 
 namespace Services.Services
 {
@@ -28,69 +29,42 @@ namespace Services.Services
         public PostGetProxy GetPost(int id)
         {
             Post dbPost;
+            PostGetProxy pgp;
 
             dbPost = postRepo.Get(id);
+
+            pgp = Converters.Converter<Post, PostGetProxy>.Convert(dbPost);
+
+            return pgp;
+
+        }
+
+        public PostGetProxy Add(PostGetProxy postProxy)
+        {
+            Post dbPost;
+
+            if (postProxy == null)
+                throw new ArgumentNullException("postProxy");
+
+            dbPost = Converters.Converter<PostGetProxy, Post>.Convert(postProxy);
             
-            if (dbPost != null)
-            {
-                return Converters.Converter<Post, PostGetProxy>.Convert(dbPost);
-            }
-            else
-                throw new Exception("Not found entity in DB.");
+            return Converters.Converter<Post, PostGetProxy>.Convert(postRepo.Add(dbPost));
         }
 
-        public bool TryAdd(PostGetProxy postProxy)
+        public PostGetProxy UpdatePost(PostGetProxy postProxy)
         {
-            try
-            {
-                Post dbPost;
+            Post dbPost;
 
-                if (postProxy == null)
-                {
-                    return false;                    
-                }
+            if (postProxy == null)
+                throw new ArgumentNullException("postProxy");
 
-                dbPost = Converters.Converter<PostGetProxy, Post>.Convert(postProxy);
-
-                postRepo.Add(dbPost);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-
-        public void UpdatePost(PostGetProxy postProxy)
-        {
-            try
-            {
-                Post dbPost;
-
-                if (postProxy == null)
-                {
-                    return;
-                }
-
-                dbPost = Converters.Converter<PostGetProxy, Post>.Convert(postProxy);
-                postRepo.Update(dbPost);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            dbPost = Converters.Converter<PostGetProxy, Post>.Convert(postProxy);
+            return Converters.Converter<Post, PostGetProxy>.Convert(postRepo.Update(dbPost));
         }
 
         public void DeletePost(int postId)
         {
-            try
-            {
-                postRepo.Delete(postId);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            postRepo.Delete(postId);
         }
     }
 }

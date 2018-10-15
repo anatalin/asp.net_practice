@@ -13,12 +13,12 @@ namespace Core.Interceptors
     {
         public override void ReaderExecuting(DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext)
         {
-            var cont = interceptionContext.DbContexts.FirstOrDefault();
-
-            if (cont == null)
+            var context = interceptionContext.DbContexts.OfType<LearnDBContext>().FirstOrDefault();
+            
+            if (context == null)
                 return;
 
-            if (((LearnDBContext)cont).UseRecompileOption)
+            if (context.UseRecompileOption)
             {
                 if ((command.CommandText.StartsWith("Select", StringComparison.OrdinalIgnoreCase)) && !command.CommandText.Contains("option(recompile)"))
                 {

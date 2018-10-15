@@ -39,7 +39,7 @@ namespace TestDBApp
 
                 PostGetProxy postProxy = new PostGetProxy() {AuthorId=1, Description="Test description", PublishDate = DateTime.Now, Text="New text"};
 
-                ps.TryAdd(postProxy);
+                ps.Add(postProxy);
 
                 context.SaveChanges();
             }
@@ -59,14 +59,13 @@ namespace TestDBApp
 
         private void deleteButton_Click(object sender, EventArgs e)
         {
-            using (LearnDBContext context = new LearnDBContext())
-            {
-                var postRepo = new PostRepository();
+            var postRepo = new PostRepository();
 
-                postRepo.Delete(1);//(new Post { PostId = 1, PublishDate = Convert.ToDateTime("23.08.2017") });
+            //postRepo.Delete(1);
+                
+            Post toDel = new Post { PostId = 1, PublishDate = Convert.ToDateTime("23.08.2017") };
 
-                context.SaveChanges();
-            }
+            postRepo.Delete(toDel);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Services.ProxyModels;
+﻿using LearnWebApplication.Filters;
+using Services.ProxyModels;
+using Services.Results;
 using Services.Services;
 using System;
 using System.Collections.Generic;
@@ -8,10 +10,11 @@ using System.Net.Http;
 using System.Web.Http;
 
 namespace LearnWebApplication.Controllers
-{   
+{
     /// <summary>
     /// Контроллер предоставляет интерфейс взаимодействия с постами
     /// </summary>
+    [ModelException]
     public class PostsController : ApiController
     {
         private readonly IPostService ps;
@@ -35,9 +38,9 @@ namespace LearnWebApplication.Controllers
         /// <returns></returns>
         // GET: api/Posts
         [Route("api/posts")]
-        public IEnumerable<PostGetProxy> GetAll()
+        public Result<IEnumerable<PostGetProxy>> GetAll()
         {
-            return ps.GetAllPosts();
+            return new Result<IEnumerable<PostGetProxy>>() { Data = ps.GetAllPosts()};
         }
 
         /// <summary>
@@ -50,9 +53,9 @@ namespace LearnWebApplication.Controllers
         /// <returns>Сущность поста из БД</returns>
         // GET: api/Posts/5
         [Route("api/posts/{id}")]
-        public PostGetProxy Get(int id)
+        public Result<PostGetProxy> Get(int id)
         {
-            return ps.GetPost(id);
+            return new Result<PostGetProxy>() { Data = ps.GetPost(id) };
         }
 
         /// <summary>
@@ -63,12 +66,9 @@ namespace LearnWebApplication.Controllers
         //Add Post entity
         [HttpPost]
         [Route("api/posts")]
-        public void Create(PostGetProxy post)
+        public Result<PostGetProxy> Create(PostGetProxy post)
         {
-            if(!ps.TryAdd(post))
-            {
-                //что если ошибка?
-            }
+            return new Result<PostGetProxy>() { Data = ps.Add(post) };
         }
 
         /// <summary>
@@ -79,9 +79,9 @@ namespace LearnWebApplication.Controllers
         //Редактирование поста
         [HttpPut]
         [Route("api/posts")]
-        public void Update(PostGetProxy post)
+        public Result<PostGetProxy> Update(PostGetProxy post)
         {
-            ps.UpdatePost(post);
+            return new Result<PostGetProxy>() { Data = ps.UpdatePost(post) };
         }
 
         /// <summary>

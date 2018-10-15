@@ -53,6 +53,7 @@
     <Compile Include="ProxyModels\AuthorGetProxy.cs" />
     <Compile Include="ProxyModels\CommentGetProxy.cs" />
     <Compile Include="ProxyModels\PostGetProxy.cs" />
+    <Compile Include="Results\Result.cs" />
     <Compile Include="Services\CommentService.cs" />
     <Compile Include="Services\ICommentService.cs" />
     <Compile Include="Services\IPostService.cs" />

@@ -1,5 +1,7 @@
 ﻿using Core.Models;
+using LearnWebApplication.Filters;
 using Services.ProxyModels;
+using Services.Results;
 using Services.Services;
 using System;
 using System.Collections.Generic;
@@ -13,6 +15,7 @@ namespace LearnWebApplication.Controllers
     /// <summary>
     /// Предоставляет интерфейс взаимодействия с комментариями
     /// </summary>
+    [ModelException]
     public class CommentsController : ApiController
     {
         private readonly ICommentService cs;
@@ -29,9 +32,9 @@ namespace LearnWebApplication.Controllers
         // PUT: api/Comments
         [HttpPut]
         [Route("api/comments")]
-        public void Update(CommentGetProxy comment)
+        public Result<CommentGetProxy> Update(CommentGetProxy comment)
         {
-            cs.UpdateComment(comment);
+            return new Result<CommentGetProxy>() { Data = cs.UpdateComment(comment) };
         }
 
         /// <summary>
@@ -53,10 +56,9 @@ namespace LearnWebApplication.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("api/posts/{postId}/comments")]
-        public IEnumerable<CommentGetProxy> Get(int postId)
+        public Result<IEnumerable<CommentGetProxy>> Get(int postId)
         {
-            //IEnumerable<Comment> list = cs.GetComments(postId);
-            return cs.GetComments(postId);
+            return new Result<IEnumerable<CommentGetProxy>>() { Data = cs.GetComments(postId) };
         }
 
         /// <summary>
@@ -66,12 +68,9 @@ namespace LearnWebApplication.Controllers
         /// <param name="comment"></param>
         [HttpPost]
         [Route("api/posts/{postId}/comments")]
-        public void Create(int postId, CommentGetProxy comment)
+        public Result<CommentGetProxy> Create(int postId, CommentGetProxy comment)
         {
-            if (!cs.AddCommentByPost(postId, comment))
-            {
-                //обработать ошибку
-            }
+            return new Result<CommentGetProxy>() { Data = cs.AddCommentByPost(postId, comment)};
         }
     }
 }
